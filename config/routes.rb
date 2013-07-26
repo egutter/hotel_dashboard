@@ -5,6 +5,8 @@ HotelDashboard::Application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'home#index'
 
+  get 'reports/:hotel' => 'reports#index', :as => :reports
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

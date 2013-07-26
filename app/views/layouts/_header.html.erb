@@ -1,0 +1,66 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+
+  <div class="navbar-inner">
+
+    <div class="container">
+
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <i class="icon-cog"></i>
+      </a>
+
+      <a class="brand" href="/">
+        525 HOTEL - Dashboard
+      </a>
+
+    </div> <!-- /container -->
+
+  </div> <!-- /navbar-inner -->
+
+</div> <!-- /navbar -->
+
+
+
+
+
+<div class="subnavbar">
+
+  <div class="subnavbar-inner">
+
+    <div class="container">
+
+      <a class="btn-subnavbar collapsed" data-toggle="collapse" data-target=".subnav-collapse">
+        <i class="icon-reorder"></i>
+      </a>
+
+      <div class="subnav-collapse collapse">
+        <ul class="mainnav">
+
+          <li class="active">
+            <a href="<%= root_path%>">
+              <i class="icon-home"></i>
+              <span>Inicio</span>
+            </a>
+          </li>
+
+          <li class="dropdown">
+            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="icon-bar-chart"></i>
+              <span>Reportes</span>
+              <b class="caret"></b>
+            </a>
+
+            <ul class="dropdown-menu">
+              <li><a href="<%=reports_path(:sheltown)%>"><i class="icon-angle-right"></i>Hotel Sheltown</a></li>
+              <li><a href="<%=reports_path(:impala)%>"><i class="icon-angle-right"></i>Hotel Impala</a></li>
+              <li><a href="<%=reports_path(:embajador)%>"><i class="icon-angle-right"></i>Embajador Hotel</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div> <!-- /.subnav-collapse -->
+
+    </div> <!-- /container -->
+
+  </div> <!-- /subnavbar-inner -->
+
+</div> <!-- /subnavbar -->
+
