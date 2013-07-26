@@ -13,4 +13,12 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
+//= require ./global
+//= require ./libs/jquery-ui-1.10.0.custom.min
+//= require ./libs/jquery.ui.datepicker-es
+//= require ./libs/bootstrap.min
+//= require ./libs/less-1.3.0.min
+//= require ./libs/jquery.ui.touch-punch.min
+//= require ./libs/highcharts
+//= require ./libs/exporting
+//= require ./libs/chosen.jquery.min
