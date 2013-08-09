@@ -38,6 +38,16 @@ group :production do
   gem "ruby-oci8", "~> 2.1.5"
 end
 
+group :test do
+  gem "minitest", "~> 4.7"
+  gem "minitest-reporters", '>= 0.5.0'
+end
+group :development, :test do
+  gem 'pg'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+end
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

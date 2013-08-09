@@ -1,0 +1,59 @@
+<div class="widget stacked">
+  <div class="widget-header">
+    <i class="icon-filter"></i>
+    <h3>Filtros</h3>
+    <div class="pull-right" style="padding-right: 10px;"><a href="#" id="showFilter">Mostrar</a></div>
+  </div>
+  <div id="filters" class="widget-content">
+    <form class="form-horizontal">
+      <fieldset>
+        <div class="row">
+          <div class="span5">
+            <!--<div style="padding-left: 50px;"><h4>Fecha</h4></div>-->
+            <div class="control-group">
+              <label class="control-label" for="from_date">Fecha desde:</label>
+              <div class="controls">
+                <input type="text" id="from_date" class="input-small" name="from_date" value="<%=@date_range.begin.strftime('%d/%m/%Y')%>"/>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="to_date">Fecha hasta:</label>
+              <div class="controls">
+                <input type="text" id="to_date" class="input-small" name="to_date" value="<%=@date_range.end.strftime('%d/%m/%Y')%>"/>
+              </div>
+            </div>
+          </div>
+          <div class="span5">
+            <div class="control-group">
+              <label class="control-label" for="from_date">Tarifa:</label>
+              <div class="controls">
+                <select data-placeholder="Seleccione un código..." class="input-large chzn-select" multiple>
+                  <option>ABC</option>
+                  <option>XYZ</option>
+                  <option>QWE</option>
+                  <option>POI</option>
+                </select>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="from_date">Fuente:</label>
+              <div class="controls">
+                <select data-placeholder="Seleccione un código..." class="input-large chzn-select" multiple>
+                  <option>ABC</option>
+                  <option>XYZ</option>
+                  <option>QWE</option>
+                  <option>POI</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="span11">
+            <button type="submit" id="filter-report" class="btn btn-primary pull-right">Filtrar</button>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>

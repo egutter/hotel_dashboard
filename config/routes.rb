@@ -6,6 +6,7 @@ HotelDashboard::Application.routes.draw do
   root 'home#index'
 
   get 'reports/:hotel' => 'reports#index', :as => :reports
+  get 'reports/:hotel/occupancy_data' => 'reports#occupancy_data', :as => :reports_occupancy_data
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
