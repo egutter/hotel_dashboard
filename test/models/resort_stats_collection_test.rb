@@ -22,7 +22,7 @@ class ResortStatsCollectionTest < MiniTest::Unit::TestCase
   def test_each_day_stats_reservation_date
     result = []
     @stats.each_day_stats {|stats| result << stats.reservation_date}
-    assert_equal ['07/08', '08/08'], result
+    assert_equal [Date.new(2013, 8, 7), Date.new(2013, 8, 8)], result
   end
 
   def test_each_day_stats_occupancy
