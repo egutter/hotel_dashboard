@@ -12,7 +12,7 @@
   <tbody>
   <% @pickup_results.each_day_pickup do |pickup| %>
     <tr>
-      <td><%= pickup.reservation_date %></td>
+      <td><%= pickup.reservation_date.strftime('%d/%m') %></td>
       <td><%= pickup.reservations_at_begin_date %></td>
       <td><%= pickup.pickup_rooms %></td>
       <td><%= pickup.reservations_at_end_date %></td>

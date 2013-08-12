@@ -6,13 +6,9 @@ class ResortStatsCollection
   end
 
   def add_daily_reservation(daily_reservation)
-    @daily_reservations_by_date[format_date(daily_reservation)] ||= []
+    @daily_reservations_by_date[daily_reservation.reservation_date] ||= []
 
-    @daily_reservations_by_date[format_date(daily_reservation)] << daily_reservation
-  end
-
-  def format_date(daily_reservation)
-    daily_reservation.reservation_date.strftime('%d/%m')
+    @daily_reservations_by_date[daily_reservation.reservation_date] << daily_reservation
   end
 
   def each_day_stats
