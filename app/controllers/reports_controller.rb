@@ -4,6 +4,8 @@ class ReportsController < ApplicationController
     @date_range = Date.today.at_beginning_of_month..Date.today.advance(:months => 2).at_end_of_month
     @pickup_date_range = (Date.today-2)..Date.today
     @pickup_results = PickupReport.new(resort_code_by_name, @date_range, @pickup_date_range, RepositoryFactory.new).generate_report_data
+    @rate_codes = RateCodeRepository.find_by_resort_code resort_code_by_name
+    @origin_of_bookings = OriginOfBookingRepository.find_by_resort_code resort_code_by_name
   end
 
   def occupancy_data

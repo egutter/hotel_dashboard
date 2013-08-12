@@ -28,10 +28,9 @@
               <label class="control-label" for="from_date">Tarifa:</label>
               <div class="controls">
                 <select data-placeholder="Seleccione un código..." class="input-large chzn-select" multiple>
-                  <option>ABC</option>
-                  <option>XYZ</option>
-                  <option>QWE</option>
-                  <option>POI</option>
+                  <% @rate_codes.each do |rate_code| %>
+                    <option value="<%= rate_code.code %>"><%= rate_code.code %> - <%= rate_code.description %></option>
+                  <% end %>
                 </select>
               </div>
             </div>
@@ -39,10 +38,9 @@
               <label class="control-label" for="from_date">Fuente:</label>
               <div class="controls">
                 <select data-placeholder="Seleccione un código..." class="input-large chzn-select" multiple>
-                  <option>ABC</option>
-                  <option>XYZ</option>
-                  <option>QWE</option>
-                  <option>POI</option>
+                  <% @origin_of_bookings.each do |origin_of_booking| %>
+                    <option value="<%= origin_of_booking.code %>"><%= origin_of_booking.code %> - <%= origin_of_booking.description %></option>
+                  <% end %>
                 </select>
               </div>
             </div>
