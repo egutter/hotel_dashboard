@@ -44,9 +44,9 @@ group :test do
 end
 group :development, :test do
   gem 'pg'
-  gem 'better_errors'
-  gem 'binding_of_caller'
 end
+gem 'better_errors'
+gem 'binding_of_caller'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
