@@ -6,9 +6,9 @@ class DailyReservationRepository
     def find_by_resort_and_date_range(resort, date_range)
       find_reservation_daily_elements_query(date_range, resort).
         collect { |result|
-          DailyReservation.new(result[:count],
+          DailyReservation.new(result[:count_reservations],
                                result[:reservation_date],
-                               result[:sum],
+                               result[:sum_shared_amount],
                                result[:currency_code],
                                find_conversion_rate_by(result[:reservation_date], result[:currency_code]))
       }
@@ -16,9 +16,9 @@ class DailyReservationRepository
     def with_each_find_by_resort_and_date_range(resort, date_range)
       find_reservation_daily_elements_query(date_range, resort).
         each { |result|
-          yield DailyReservation.new(result[:count],
+          yield DailyReservation.new(result[:count_reservations],
                                result[:reservation_date],
-                               result[:sum],
+                               result[:sum_shared_amount],
                                result[:currency_code],
                                find_conversion_rate_by(result[:reservation_date], result[:currency_code]))
       }
@@ -27,9 +27,9 @@ class DailyReservationRepository
     def with_each_find_by_resort_date_range_and_insert_date(resort, date_range, insert_date)
       find_reservation_daily_elements_before_insert_date_query(date_range, resort, insert_date).
         each { |result|
-          yield DailyReservation.new(result[:count],
+          yield DailyReservation.new(result[:count_reservations],
                                result[:reservation_date],
-                               result[:sum],
+                               result[:sum_shared_amount],
                                result[:currency_code],
                                find_conversion_rate_by(result[:reservation_date], result[:currency_code]))
       }
@@ -58,8 +58,8 @@ class DailyReservationRepository
 
     def base_reservation_daily_elements_query(date_range, resort)
       reservation_daily_element_name_dataset.
-        select { sum(:share_amount) }.
-        select_append { count('*') }.
+        select { sum(:share_amount).as('sum_shared_amount') }.
+        select_append { count('*').as('count_reservations') }.
         select_append(:currency_code).
         select_append(Sequel.qualify(:reservation_daily_element_name, :reservation_date)).
         join_table(:inner, :reservation_daily_elements, :resv_daily_el_seq => :resv_daily_el_seq).
