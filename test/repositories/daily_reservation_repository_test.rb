@@ -5,13 +5,16 @@ require 'minitest/autorun'
 class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
 
   def setup
-    new_daily_reservation(Date.yesterday, 100.0, 'USD')
-    new_daily_reservation(Date.yesterday, 150.0, 'USD')
-    new_daily_reservation(Date.yesterday, 450.0, 'ARS')
-    new_daily_reservation(Date.today, 50.0, 'USD')
-    new_daily_reservation(Date.today, 300.0, 'ARS')
-    new_daily_reservation(Date.today, 150.0, 'USD')
-    new_daily_reservation(Date.today, 450.0, 'ARS')
+    @resv_daily_el_seq = 0
+    new_daily_reservation(Date.yesterday, 100.0, 'USD', 'RESERVED')
+    new_daily_reservation(Date.yesterday, 150.0, 'USD', 'CHECKED IN')
+    new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'NO SHOW')
+    new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'CANCELLED')
+    new_daily_reservation(Date.today, 50.0, 'USD', 'RESERVED')
+    new_daily_reservation(Date.today, 300.0, 'ARS', 'CHECKED IN')
+    new_daily_reservation(Date.today, 150.0, 'USD', 'RESERVED')
+    new_daily_reservation(Date.today, 450.0, 'ARS', 'CANCELLED')
+    new_daily_reservation(Date.today, 450.0, 'ARS', 'CHECKED OUT')
 
     new_usd_foreign_currency()
     new_currency_exchange(Date.yesterday, 0.2)
@@ -54,11 +57,17 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
 
   private
 
-  def new_daily_reservation(reservation_date, amount, currency_code)
+  def   new_daily_reservation(reservation_date, amount, currency_code, reservation_status)
+    @resv_daily_el_seq += 1
     DB[:reservation_daily_element_name].insert(:resort => Resort::IMPALA_CODE,
                                                :reservation_date => reservation_date,
                                                :share_amount => amount,
+                                               :resv_daily_el_seq => @resv_daily_el_seq,
                                                :currency_code => currency_code)
+    DB[:reservation_daily_elements].insert(:resort => Resort::IMPALA_CODE,
+                                               :reservation_date => reservation_date,
+                                               :resv_daily_el_seq => @resv_daily_el_seq,
+                                               :resv_status => reservation_status)
   end
 
   def new_currency_exchange(begin_date, currency_exchange)

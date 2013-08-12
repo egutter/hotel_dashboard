@@ -18,11 +18,15 @@ class CurrencyExchangeRepository
     end
 
     def find_by_date_query(reservation_date)
-      dataset.where(:currency_code => USD_CURRENCY_CODE,
+      query = dataset.where(:currency_code => USD_CURRENCY_CODE,
                     :base_curr_code => ARS_CURRENCY_CODE,
                     :exchange_rate_type => POST_EXCHANGE_RATE_TYPE).
         filter { begin_date <= reservation_date }.
         order(Sequel.desc(:begin_date))
+
+      Rails.logger.debug "Find currency exchange rate view query: #{query}"
+
+      return query
     end
 
     def dataset

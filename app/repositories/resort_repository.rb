@@ -13,10 +13,13 @@ class ResortRepository
     private
 
     def room_repairs(code, date_range)
-      room_repairs_dataset.where(:resort => code, :room_status => OUT_OF_ORDER_STATUS).
+      query = room_repairs_dataset.where(:resort => code, :room_status => OUT_OF_ORDER_STATUS).
         filter { begin_date <= date_range.end }.
-        filter { end_date >= date_range.begin }.
-        collect { |result|
+        filter { end_date >= date_range.begin }
+
+      Rails.logger.debug "Find room repairs query: #{query}"
+
+      query.collect { |result|
         RoomRepair.new(result[:begin_date]..result[:end_date])
       }
     end

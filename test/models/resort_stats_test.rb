@@ -4,37 +4,41 @@ require 'minitest/autorun'
 class ResortStatsTest < MiniTest::Unit::TestCase
 
   def setup
-    resort = Resort.impala 100, []
-    @stats = ResortStats.new(resort)
+    @resort = Resort.new(Resort::IMPALA_CODE, 100, [])
+    @reservation_date = Date.today
 
-    @stats.add_daily_reservation(DailyReservation.new(10, Date.new(2013, 8, 7), 1000, 'USD', 1))
-    @stats.add_daily_reservation(DailyReservation.new(20, Date.new(2013, 8, 7), 8000, 'ARS', 0.2))
-    @stats.add_daily_reservation(DailyReservation.new(30, Date.new(2013, 8, 8), 2800, 'USD', 1))
-    @stats.add_daily_reservation(DailyReservation.new(10, Date.new(2013, 8, 8), 5000, 'ARS', 0.2))
+    @daily_reservations = [DailyReservation.new(10, Date.new(2013, 8, 7), 1000, 'USD', 1),
+                           DailyReservation.new(15, Date.new(2013, 8, 7), 1500, 'USD', 1)
+    ]
   end
 
-  def test_each_day_stats_size
-    assert_equal 4, @stats.each_day_stats.size
-    assert_equal 2, @stats.each_day_stats[:reservation_date].size
-    assert_equal 2, @stats.each_day_stats[:occupancy].size
-    assert_equal 2, @stats.each_day_stats[:rate].size
-    assert_equal 2, @stats.each_day_stats[:revPar].size
+  def test_reservation_date
+    stats = ResortStats.new(@resort, @reservation_date, @daily_reservations)
+    assert_equal Date.today, stats.reservation_date
   end
 
-  def test_each_day_stats_reservation_date
-    assert_equal ['07/08', '08/08'], @stats.each_day_stats[:reservation_date]
+  def test_total_reserved_rooms_should_sum_all_daily_reservations
+    stats = ResortStats.new(@resort, @reservation_date, @daily_reservations)
+    assert_equal 25, stats.total_reserved_rooms
   end
 
-  def test_each_day_stats_occupancy
-    assert_equal [30, 40], @stats.each_day_stats[:occupancy]
+  def test_rate_average_should_be_zero_when_none_reserved_rooms
+    stats = ResortStats.new(@resort, @reservation_date, [])
+    assert_equal 0, stats.rate_average
   end
 
-  def test_each_day_stats_rate
-    assert_equal [86.67, 95], @stats.each_day_stats[:rate]
+  def test_rate_average_should_be_rate_in_usd_divided_by_total_reserved_rooms
+    stats = ResortStats.new(@resort, @reservation_date, @daily_reservations)
+    assert_equal 100, stats.rate_average
   end
 
-  def test_each_day_stats_revPar
-    assert_equal [26, 38], @stats.each_day_stats[:revPar]
+  def test_occupancy_percentage_should_be_total_reserved_rooms_divided_by_resort_rooms
+    stats = ResortStats.new(@resort, @reservation_date, @daily_reservations)
+    assert_equal 25, stats.occupancy_percentage
   end
 
+  def test_revenue_per_available_room_should_be_rate_average_times_occupancy
+    stats = ResortStats.new(@resort, @reservation_date, @daily_reservations)
+    assert_equal 25, stats.revenue_per_available_room
+  end
 end

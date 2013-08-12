@@ -9,5 +9,17 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require_tree .
+ *= require bootstrap.min
+ *= require bootstrap-responsive.min
+ *= require font-awesome.min
+ *= require ./ui-lightness/jquery-ui-1.10.0.custom.min
+ *= require ./theme/base-admin-2
+ *= require ./theme/base-admin-2-responsive
+ *= require ./pages/dashboard
+ *= require ./pages/plans
+ *= require ./pages/pricing
+ *= require ./pages/reports
+ *= require chosen
+ *= require home
+ *= require custom
  */

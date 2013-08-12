@@ -1,0 +1,29 @@
+<div class="widget stacked widget-table action-table">
+  <div class="widget-header">
+    <i class="icon-th-list"></i>
+
+    <h3>Datos</h3>
+
+    <div class="pull-right" style="padding-right: 10px;"><a href="#">Exportar CSV</a></div>
+  </div>
+  <div class="widget-content pick-up">
+    <div class="row">
+      <div class="span7">
+        <form class="form-horizontal">
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label" for="from_date">Pick-up del:</label>
+              <div class="controls">
+                <input type="text" id="pickup_from_date" class="input-small" name="pickup_from_date" value="<%= @pickup_date_range.begin.strftime('%d/%m/%Y') %>"/>
+                <span>&nbsp;al:&nbsp;</span>
+                <input type="text" id="pickup_to_date" class="input-small" name="pickup_to_date" value="<%= @pickup_date_range.end.strftime('%d/%m/%Y') %>"/>
+                <button type="submit" id="filter-pickup" class="btn btn-primary pull-right">Filtrar</button>
+              </div>
+            </div>
+           </fieldset>
+        </form>
+      </div>
+    </div>
+    <%= render :partial => 'pickup_table_body' %>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<table class="table table-striped table-bordered" id="pickup-table" data-pickup-path="<%=reports_pickup_data_path%>">
+  <thead>
+  <tr>
+    <th>Fecha</th>
+    <th>Reservas al <%=@pickup_date_range.begin.strftime('%d/%m') %></th>
+    <th>Pick up</th>
+    <th>Reservas al <%=@pickup_date_range.end.strftime('%d/%m') %></th>
+    <th>% Occ al <%=@pickup_date_range.end.strftime('%d/%m') %></th>
+    <th>ADR</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @pickup_results.each_day_pickup do |pickup| %>
+    <tr>
+      <td><%= pickup.reservation_date %></td>
+      <td><%= pickup.reservations_at_begin_date %></td>
+      <td><%= pickup.pickup_rooms %></td>
+      <td><%= pickup.reservations_at_end_date %></td>
+      <td><%= number_to_percentage(pickup.occupancy_percentage_at_end_date, precision: 0) %> </td>
+      <td><%= number_to_currency(pickup.average_rate_at_end_date) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

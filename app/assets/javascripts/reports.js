@@ -1,3 +1,18 @@
+var PickupTable = {
+    refresh: function() {
+        var url = $('#pickup-table').attr('data-pickup-path');
+        var from_date = $('#from_date').val();
+        var to_date = $('#to_date').val();
+        var pickup_from_date = $('#pickup_from_date').val();
+        var pickup_to_date = $('#pickup_to_date').val();
+        $.get(url, {from_date: from_date,
+            to_date: to_date,
+            pickup_from_date: pickup_from_date,
+            pickup_to_date: pickup_to_date}, function (data) {
+            $('#pickup-table').replaceWith(data);
+        });
+    }
+};
 var ReportsChart = {
     chart: null,
     refresh: function() {
@@ -95,19 +110,30 @@ var ReportsChart = {
 };
 
 $(function () {
-        $(".chzn-select").chosen();
-        $( "#from_date" ).datepicker();
-        $( "#to_date" ).datepicker();
-        $("#filters").hide();
-        $("#showFilter").click(function(e) {
-            e.preventDefault();
-            $("#filters").slideToggle();
-            var text = $('#showFilter').text();
-            $("#showFilter").text(text == "Mostrar" ? "Ocultar" : "Mostrar");
-        });
-        $("#filter-report").click(function(e) {
-            ReportsChart.refresh();
-            e.preventDefault();
-        });
-        ReportsChart.init();
+    $(".chzn-select").chosen();
+    $( "#from_date" ).datepicker();
+    $( "#to_date" ).datepicker();
+    $( "#pickup_from_date" ).datepicker();
+    $( "#pickup_to_date" ).datepicker();
+    $("#filters").hide();
+    $("#showFilter").click(function(e) {
+        e.preventDefault();
+        $("#filters").slideToggle();
+        var text = $('#showFilter').text();
+        $("#showFilter").text(text == "Mostrar" ? "Ocultar" : "Mostrar");
     });
+    $("#filter-report").click(function(e) {
+        ReportsChart.refresh();
+        PickupTable.refresh();
+        e.preventDefault();
+    });
+    $("#filter-pickup").click(function(e) {
+        PickupTable.refresh();
+        e.preventDefault();
+    });
+    $("#refresh-chart").click(function(e) {
+        ReportsChart.refresh();
+        e.preventDefault();
+    });
+    ReportsChart.init();
+});

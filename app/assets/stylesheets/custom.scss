@@ -10,3 +10,14 @@ Assigned to:	You
 .form-horizontal .control-group {
     margin-bottom: 10px;
 }
+.pick-up {
+  .form-horizontal .controls {
+      margin-left: 10px;
+  }
+  .control-label {
+    padding-right: 5px;
+  }
+}
+.widget.widget-table .widget-content,.pick-up {
+  padding: 10px;
+}
