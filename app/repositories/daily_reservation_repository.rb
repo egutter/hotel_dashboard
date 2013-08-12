@@ -40,7 +40,7 @@ class DailyReservationRepository
         group(Sequel.qualify(:reservation_daily_element_name, :reservation_date), :currency_code).
         order(Sequel.qualify(:reservation_daily_element_name, :reservation_date), :currency_code)
 
-      Rails.logger.debug "Find reservation daily elements query: #{query}"
+      Rails.logger.debug "Find reservation daily elements query: #{query.sql}"
 
       return query
     end
@@ -51,7 +51,7 @@ class DailyReservationRepository
         group(Sequel.qualify(:reservation_daily_element_name, :reservation_date), :currency_code).
         order(Sequel.qualify(:reservation_daily_element_name, :reservation_date), :currency_code)
 
-      Rails.logger.debug "Find reservation daily elements before insert date query: #{query}"
+      Rails.logger.debug "Find reservation daily elements before insert date query: #{query.sql}"
 
       return query
     end

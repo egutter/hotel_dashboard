@@ -24,7 +24,7 @@ class CurrencyExchangeRepository
         filter { begin_date <= reservation_date }.
         order(Sequel.desc(:begin_date))
 
-      Rails.logger.debug "Find currency exchange rate view query: #{query}"
+      Rails.logger.debug "Find currency exchange rate view query: #{query.sql}"
 
       return query
     end

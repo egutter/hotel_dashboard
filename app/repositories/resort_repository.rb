@@ -17,7 +17,7 @@ class ResortRepository
         filter { begin_date <= date_range.end }.
         filter { end_date >= date_range.begin }
 
-      Rails.logger.debug "Find room repairs query: #{query}"
+      Rails.logger.debug "Find room repairs query: #{query.sql}"
 
       query.collect { |result|
         RoomRepair.new(result[:begin_date]..result[:end_date])
