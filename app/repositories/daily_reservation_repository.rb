@@ -1,6 +1,8 @@
 class DailyReservationRepository
 
   RESERVED_STATUS = ['CHECKED IN', 'CHECKED OUT', 'NO SHOW', 'RESERVED']
+  EXCLUDE_ROOM_CATEGORY_BELLOW = 0
+  NUMBER_FORMAT = '99999999'
 
   class << self
     def find_by_resort_and_date_range(resort, date_range)
@@ -66,7 +68,8 @@ class DailyReservationRepository
         where(Sequel.qualify(:reservation_daily_element_name, :resort) => resort.code).
         where(Sequel.qualify(:reservation_daily_elements, :resv_status) => RESERVED_STATUS).
         filter { Sequel.qualify(:reservation_daily_element_name, :reservation_date) >= date_range.begin }.
-        filter { Sequel.qualify(:reservation_daily_element_name, :reservation_date) <= date_range.end }
+        filter { Sequel.qualify(:reservation_daily_element_name, :reservation_date) <= date_range.end }.
+        filter { to_number(Sequel.qualify(:reservation_daily_elements, :room_category), NUMBER_FORMAT) > EXCLUDE_ROOM_CATEGORY_BELLOW }
     end
 
     private
