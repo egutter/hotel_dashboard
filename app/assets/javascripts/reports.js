@@ -49,9 +49,6 @@ var ReportsChart = {
             title: {
                 text: 'Ocupación vs Rate'
             },
-            subtitle: {
-                text: 'desde el 01/07/2013 al 12/07/2013'
-            },
             yAxis: [{ // Primary yAxis
                 labels: {
                     format: '$ {value}',
