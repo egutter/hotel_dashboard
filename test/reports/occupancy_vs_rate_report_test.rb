@@ -14,7 +14,8 @@ class OccupancyVsRateReportTest < MiniTest::Unit::TestCase
     # daily_reservation_repository.expect :with_each_find_by_resort_and_date_range
     test_repository_factory = TestRepositoryFactory.new(resort_repository, daily_reservation_repository)
 
-    @report = OccupancyVsRateReport.new(Resort::IMPALA_CODE, date_range, test_repository_factory)
+    rate_code_list, origin_of_booking_list = '', ''
+    @report = OccupancyVsRateReport.new(Resort::IMPALA_CODE, date_range, rate_code_list, origin_of_booking_list, test_repository_factory)
   end
 
   def test_generate_report_data

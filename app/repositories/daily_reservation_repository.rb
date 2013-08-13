@@ -5,18 +5,8 @@ class DailyReservationRepository
   NUMBER_FORMAT = '99999999'
 
   class << self
-    def find_by_resort_and_date_range(resort, date_range)
-      find_reservation_daily_elements_query(date_range, resort).
-        collect { |result|
-          DailyReservation.new(result[:count_reservations],
-                               result[:reservation_date],
-                               result[:sum_shared_amount],
-                               result[:currency_code],
-                               find_conversion_rate_by(result[:reservation_date], result[:currency_code]))
-      }
-    end
-    def with_each_find_by_resort_and_date_range(resort, date_range)
-      find_reservation_daily_elements_query(date_range, resort).
+    def each_with_filter(filter)
+      build_query_with_filter(filter).
         each { |result|
           yield DailyReservation.new(result[:count_reservations],
                                result[:reservation_date],
@@ -26,19 +16,37 @@ class DailyReservationRepository
       }
     end
 
-    def with_each_find_by_resort_date_range_and_insert_date(resort, date_range, insert_date)
-      find_reservation_daily_elements_before_insert_date_query(date_range, resort, insert_date).
-        each { |result|
-          yield DailyReservation.new(result[:count_reservations],
-                               result[:reservation_date],
-                               result[:sum_shared_amount],
-                               result[:currency_code],
-                               find_conversion_rate_by(result[:reservation_date], result[:currency_code]))
-      }
+    def find_with_filter(filter)
+      result = []
+      each_with_filter(filter) {|daily_reservation| result << daily_reservation}
+      result
     end
 
-    def find_reservation_daily_elements_query(date_range, resort)
-      query =  base_reservation_daily_elements_query(date_range, resort).
+    def filter_by_resort(query, resort)
+      query.where(Sequel.qualify(:reservation_daily_element_name, :resort) => resort.code)
+    end
+
+    def filter_by_rate_codes(query, rate_codes)
+      query.where(Sequel.qualify(:reservation_daily_element_name, :rate_code) => rate_codes)
+    end
+
+    def filter_by_origin_of_bookings(query, origin_of_bookings)
+      query.where(Sequel.qualify(:reservation_daily_elements, :origin_of_booking) => origin_of_bookings)
+    end
+
+    def filter_by_insert_date(query, insert_date)
+      query.filter { Sequel.qualify(:reservation_daily_element_name, :insert_date) <= insert_date }
+    end
+
+    def filter_by_reservation_date(query, date_range)
+      query.filter { Sequel.qualify(:reservation_daily_element_name, :reservation_date) >= date_range.begin }.
+            filter { Sequel.qualify(:reservation_daily_element_name, :reservation_date) <= date_range.end }
+    end
+
+    private
+
+    def build_query_with_filter(filter)
+      query = filter.apply(self, build_base_query).
         group(Sequel.qualify(:reservation_daily_element_name, :reservation_date), :currency_code).
         order(Sequel.qualify(:reservation_daily_element_name, :reservation_date), :currency_code)
 
@@ -47,32 +55,16 @@ class DailyReservationRepository
       return query
     end
 
-    def find_reservation_daily_elements_before_insert_date_query(date_range, resort, insert_date)
-      query =  base_reservation_daily_elements_query(date_range, resort).
-        filter { Sequel.qualify(:reservation_daily_element_name, :insert_date) <= insert_date }.
-        group(Sequel.qualify(:reservation_daily_element_name, :reservation_date), :currency_code).
-        order(Sequel.qualify(:reservation_daily_element_name, :reservation_date), :currency_code)
-
-      Rails.logger.debug "Find reservation daily elements before insert date query: #{query.sql}"
-
-      return query
-    end
-
-    def base_reservation_daily_elements_query(date_range, resort)
+    def build_base_query
       reservation_daily_element_name_dataset.
         select { sum(:share_amount).as('sum_shared_amount') }.
         select_append { count('*').as('count_reservations') }.
         select_append(:currency_code).
         select_append(Sequel.qualify(:reservation_daily_element_name, :reservation_date)).
         join_table(:inner, :reservation_daily_elements, :resv_daily_el_seq => :resv_daily_el_seq).
-        where(Sequel.qualify(:reservation_daily_element_name, :resort) => resort.code).
         where(Sequel.qualify(:reservation_daily_elements, :resv_status) => RESERVED_STATUS).
-        filter { Sequel.qualify(:reservation_daily_element_name, :reservation_date) >= date_range.begin }.
-        filter { Sequel.qualify(:reservation_daily_element_name, :reservation_date) <= date_range.end }.
         filter { to_number(Sequel.qualify(:reservation_daily_elements, :room_category), NUMBER_FORMAT) > EXCLUDE_ROOM_CATEGORY_BELLOW }
     end
-
-    private
 
     def find_conversion_rate_by(reservation_date, currency_code)
       currency_exchange_finder(currency_code).find_by_date(reservation_date)

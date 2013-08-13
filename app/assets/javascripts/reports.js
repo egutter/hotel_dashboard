@@ -1,31 +1,44 @@
 var PickupTable = {
-    refresh: function() {
+    refresh: function(showAlert) {
         var url = $('#pickup-table').attr('data-pickup-path');
-        var from_date = $('#from_date').val();
-        var to_date = $('#to_date').val();
-        var pickup_from_date = $('#pickup_from_date').val();
-        var pickup_to_date = $('#pickup_to_date').val();
-        $.get(url, {from_date: from_date,
-            to_date: to_date,
-            pickup_from_date: pickup_from_date,
-            pickup_to_date: pickup_to_date}, function (data) {
+        var fromDate = $('#from_date').val();
+        var toDate = $('#to_date').val();
+        var pickupFromDate = $('#pickup_from_date').val();
+        var pickupToDate = $('#pickup_to_date').val();
+        var rateCode = $('#rate-code-filter').val();
+        var originOfBooking = $('#origin-of-booking-filter').val();
+        $.get(url, {from_date: fromDate,
+                    to_date: toDate,
+                    pickup_from_date: pickupFromDate,
+                    pickup_to_date: pickupToDate,
+                    rate_code: rateCode,
+                    origin_of_booking: originOfBooking}, function (data) {
             $('#pickup-table').replaceWith(data);
-        });
+        }).done(function() {
+            if (showAlert)
+                $('#success-alert-notification').fadeIn('slow').fadeOut(2000);
+        }).fail(function(jqXHR, textStatus, errorThrown) { alert('Se produjo un error: [' + textStatus +': ' + errorThrown+']') });
     }
 };
 var ReportsChart = {
     chart: null,
     refresh: function() {
         var url = $('#chart-container').attr('data-occupancy-path');
-        var from_date = $('#from_date').val();
-        var to_date = $('#to_date').val();
+        var fromDate = $('#from_date').val();
+        var toDate = $('#to_date').val();
+        var  rateCode = $('#rate-code-filter').val();
+        var  originOfBooking = $('#origin-of-booking-filter').val();
         var _this = this;
-        $.get(url, {from_date: from_date, to_date: to_date}, function (data) {
+        $.get(url, {from_date: fromDate,
+                    to_date: toDate,
+                    rate_code: rateCode,
+                    origin_of_booking: originOfBooking}, function (data) {
             _this.chart.series[0].setData(data['occupancy'], true);
             _this.chart.series[1].setData(data['rate'], true);
             _this.chart.series[2].setData(data['revPar'], true);
             _this.chart.xAxis[0].setCategories(data['reservation_date'], true);
-        });
+        }).done(function() { $('#success-alert-notification').fadeIn('slow').fadeOut(2000); })
+            .fail(function(jqXHR, textStatus, errorThrown) { alert('Se produjo un error: [' + textStatus +': ' + errorThrown+']') });
     },
     init: function() {
         var options = {
@@ -124,11 +137,11 @@ $(function () {
     });
     $("#filter-report").click(function(e) {
         ReportsChart.refresh();
-        PickupTable.refresh();
+        PickupTable.refresh(false);
         e.preventDefault();
     });
     $("#filter-pickup").click(function(e) {
-        PickupTable.refresh();
+        PickupTable.refresh(true);
         e.preventDefault();
     });
     $("#refresh-chart").click(function(e) {

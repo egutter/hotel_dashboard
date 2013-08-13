@@ -27,7 +27,7 @@
             <div class="control-group">
               <label class="control-label" for="from_date">Tarifa:</label>
               <div class="controls">
-                <select data-placeholder="Seleccione un código..." class="input-large chzn-select" multiple>
+                <select id="rate-code-filter" data-placeholder="Seleccione un código..." class="input-large chzn-select" multiple>
                   <% @rate_codes.each do |rate_code| %>
                     <option value="<%= rate_code.code %>"><%= rate_code.code %> - <%= rate_code.description %></option>
                   <% end %>
@@ -37,7 +37,7 @@
             <div class="control-group">
               <label class="control-label" for="from_date">Fuente:</label>
               <div class="controls">
-                <select data-placeholder="Seleccione un código..." class="input-large chzn-select" multiple>
+                <select id="origin-of-booking-filter" data-placeholder="Seleccione un código..." class="input-large chzn-select" multiple>
                   <% @origin_of_bookings.each do |origin_of_booking| %>
                     <option value="<%= origin_of_booking.code %>"><%= origin_of_booking.code %> - <%= origin_of_booking.description %></option>
                   <% end %>
