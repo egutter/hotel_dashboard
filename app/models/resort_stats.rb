@@ -11,6 +11,6 @@ class ResortStats
   end
 
   def occupancy_percentage
-    @occupancy * 100
+    (@occupancy * 100).round(2)
   end
 end
