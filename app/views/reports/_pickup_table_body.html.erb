@@ -13,9 +13,9 @@
   <% @pickup_results.each_day_pickup do |pickup| %>
     <tr>
       <td><%= pickup.reservation_date.strftime('%d/%m') %></td>
-      <td><%= pickup.reservations_at_begin_date %></td>
-      <td><%= pickup.pickup_rooms %></td>
-      <td><%= pickup.reservations_at_end_date %></td>
+      <td><%= pickup.reservations_at_begin_date.to_i %></td>
+      <td><%= pickup.pickup_rooms.to_i %></td>
+      <td><%= pickup.reservations_at_end_date.to_i %></td>
       <td><%= number_to_percentage(pickup.occupancy_percentage_at_end_date, precision: 0) %> </td>
       <td><%= number_to_currency(pickup.average_rate_at_end_date) %></td>
     </tr>
