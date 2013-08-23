@@ -8,18 +8,27 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
     @resv_daily_el_seq = 0
     should_include_room_category = [1, 1001, 23123, 0]
     should_exclude_room_category = [-1, -2, -1232]
-    new_daily_reservation(Date.yesterday, 100.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE1')
-    new_daily_reservation(Date.yesterday, 100.0, 'USD', 'RESERVED', should_exclude_room_category[0], 'RATE_CODE1')
-    new_daily_reservation(Date.yesterday, 150.0, 'USD', 'CHECKED IN', should_include_room_category[1], 'RATE_CODE2')
-    new_daily_reservation(Date.yesterday, 150.0, 'USD', 'CHECKED IN', should_exclude_room_category[2], 'RATE_CODE1')
-    new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'NO SHOW', should_include_room_category[2], 'RATE_CODE1')
-    new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'CANCELLED', should_include_room_category[3], 'RATE_CODE1')
-    new_daily_reservation(Date.today, 50.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE3', 'SABRE')
-    new_daily_reservation(Date.today, 300.0, 'ARS', 'CHECKED IN', should_include_room_category[1], 'RATE_CODE1')
-    new_daily_reservation(Date.today, 150.0, 'USD', 'RESERVED', should_include_room_category[2], 'RATE_CODE2')
-    new_daily_reservation(Date.today, 150.0, 'USD', 'RESERVED', should_exclude_room_category[3], 'RATE_CODE1')
-    new_daily_reservation(Date.today, 450.0, 'ARS', 'CANCELLED', should_include_room_category[3], 'RATE_CODE1')
-    new_daily_reservation(Date.today, 450.0, 'ARS', 'CHECKED OUT', should_include_room_category[0], 'RATE_CODE1')
+    new_daily_reservation(Date.yesterday, 100.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.yesterday, 100.0, 'USD', 'RESERVED', should_exclude_room_category[0], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.yesterday, 150.0, 'USD', 'CHECKED IN', should_include_room_category[1], 'RATE_CODE2', Date.tomorrow)
+    new_daily_reservation(Date.yesterday, 150.0, 'USD', 'CHECKED IN', should_exclude_room_category[2], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'NO SHOW', should_include_room_category[2], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'CHECKED OUT', should_include_room_category[2], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'CANCELLED', should_include_room_category[3], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.today, 50.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE3', Date.tomorrow, 'SABRE')
+    new_daily_reservation(Date.today, 300.0, 'ARS', 'CHECKED IN', should_include_room_category[1], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.today, 150.0, 'USD', 'RESERVED', should_include_room_category[2], 'RATE_CODE2', Date.tomorrow)
+    new_daily_reservation(Date.today, 150.0, 'USD', 'RESERVED', should_exclude_room_category[3], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.today, 450.0, 'ARS', 'CANCELLED', should_include_room_category[3], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.today, 450.0, 'ARS', 'CHECKED OUT', should_include_room_category[0], 'RATE_CODE1', Date.tomorrow)
+
+    # Check-out day
+    new_daily_reservation(Date.tomorrow, 50.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE3', Date.tomorrow, 'SABRE')
+    new_daily_reservation(Date.tomorrow, 300.0, 'ARS', 'CHECKED IN', should_include_room_category[1], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.tomorrow, 150.0, 'USD', 'RESERVED', should_include_room_category[2], 'RATE_CODE2', Date.tomorrow)
+    new_daily_reservation(Date.tomorrow, 150.0, 'USD', 'RESERVED', should_exclude_room_category[3], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.tomorrow, 450.0, 'ARS', 'CANCELLED', should_include_room_category[3], 'RATE_CODE1', Date.tomorrow)
+    new_daily_reservation(Date.tomorrow, 450.0, 'ARS', 'CHECKED OUT', should_include_room_category[0], 'RATE_CODE1', Date.tomorrow)
 
     new_usd_foreign_currency()
     new_currency_exchange(Date.yesterday, 0.2)
@@ -130,12 +139,13 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
 
   private
 
-  def new_daily_reservation(reservation_date, amount, currency_code, reservation_status, room_category, rate_code, origin_of_booking = 'WEB')
+  def new_daily_reservation(reservation_date, amount, currency_code, reservation_status, room_category, rate_code, end_date, origin_of_booking = 'WEB')
     @resv_daily_el_seq += 1
     DB[:reservation_daily_element_name].insert(:resort => Resort::IMPALA_CODE,
                                                :reservation_date => reservation_date,
                                                :share_amount => amount,
                                                :resv_daily_el_seq => @resv_daily_el_seq,
+                                               :resv_name_id => @resv_daily_el_seq * 2,
                                                :currency_code => currency_code,
                                                :insert_date => reservation_date,
                                                :rate_code => rate_code)
@@ -146,6 +156,9 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
                                                :room_category => room_category,
                                                :resv_status => reservation_status,
                                                :origin_of_booking => origin_of_booking)
+    DB[:reservation_name].insert(:resort => Resort::IMPALA_CODE,
+                                 :resv_name_id => @resv_daily_el_seq * 2,
+                                 :trunc_end_date => end_date)
   end
 
   def new_currency_exchange(begin_date, currency_exchange)

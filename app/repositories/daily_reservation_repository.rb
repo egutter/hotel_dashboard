@@ -1,6 +1,6 @@
 class DailyReservationRepository
 
-  RESERVED_STATUS = ['CHECKED IN', 'CHECKED OUT', 'NO SHOW', 'RESERVED']
+  RESERVED_STATUS = ['CHECKED IN', 'CHECKED OUT', 'RESERVED']
   EXCLUDE_ROOM_CATEGORY_BELLOW = 0
   NUMBER_FORMAT = '99999999'
 
@@ -61,9 +61,11 @@ class DailyReservationRepository
         select_append { count('*').as('count_reservations') }.
         select_append(:currency_code).
         select_append(Sequel.qualify(:reservation_daily_element_name, :reservation_date)).
-        join_table(:inner, :reservation_daily_elements, :resv_daily_el_seq => :resv_daily_el_seq).
+        join(:reservation_daily_elements, :resv_daily_el_seq => :resv_daily_el_seq, :resort => :resort).
+        join(:reservation_name, :resv_name_id => Sequel.qualify(:reservation_daily_element_name, :resv_name_id), :resort => Sequel.qualify(:reservation_daily_element_name, :resort)).
         where(Sequel.qualify(:reservation_daily_elements, :resv_status) => RESERVED_STATUS).
-        filter { to_number(Sequel.qualify(:reservation_daily_elements, :room_category), NUMBER_FORMAT) > EXCLUDE_ROOM_CATEGORY_BELLOW }
+        filter { to_number(Sequel.qualify(:reservation_daily_elements, :room_category), NUMBER_FORMAT) > EXCLUDE_ROOM_CATEGORY_BELLOW }.
+        exclude(Sequel.qualify(:reservation_daily_element_name, :reservation_date) => Sequel.qualify(:reservation_name, :trunc_end_date))
     end
 
     def find_conversion_rate_by(reservation_date, currency_code)
