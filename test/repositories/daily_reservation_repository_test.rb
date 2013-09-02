@@ -15,7 +15,7 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
     new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'NO SHOW', should_include_room_category[2], 'RATE_CODE1', Date.tomorrow)
     new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'CHECKED OUT', should_include_room_category[2], 'RATE_CODE1', Date.tomorrow)
     new_daily_reservation(Date.yesterday, 450.0, 'ARS', 'CANCELLED', should_include_room_category[3], 'RATE_CODE1', Date.tomorrow)
-    new_daily_reservation(Date.today, 50.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE3', Date.tomorrow, 'SABRE')
+    new_daily_reservation(Date.today, 50.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE3', Date.tomorrow, 'SABRE', 2)
     new_daily_reservation(Date.today, 300.0, 'ARS', 'CHECKED IN', should_include_room_category[1], 'RATE_CODE1', Date.tomorrow)
     new_daily_reservation(Date.today, 150.0, 'USD', 'RESERVED', should_include_room_category[2], 'RATE_CODE2', Date.tomorrow)
     new_daily_reservation(Date.today, 150.0, 'USD', 'RESERVED', should_exclude_room_category[3], 'RATE_CODE1', Date.tomorrow)
@@ -23,7 +23,7 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
     new_daily_reservation(Date.today, 450.0, 'ARS', 'CHECKED OUT', should_include_room_category[0], 'RATE_CODE1', Date.tomorrow)
 
     # Check-out day
-    new_daily_reservation(Date.tomorrow, 50.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE3', Date.tomorrow, 'SABRE')
+    new_daily_reservation(Date.tomorrow, 50.0, 'USD', 'RESERVED', should_include_room_category[0], 'RATE_CODE3', Date.tomorrow, 'SABRE', 2)
     new_daily_reservation(Date.tomorrow, 300.0, 'ARS', 'CHECKED IN', should_include_room_category[1], 'RATE_CODE1', Date.tomorrow)
     new_daily_reservation(Date.tomorrow, 150.0, 'USD', 'RESERVED', should_include_room_category[2], 'RATE_CODE2', Date.tomorrow)
     new_daily_reservation(Date.tomorrow, 150.0, 'USD', 'RESERVED', should_exclude_room_category[3], 'RATE_CODE1', Date.tomorrow)
@@ -60,7 +60,7 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
     assert_equal 1, daily_reservations[0].reserved_rooms, "Should count the number of reserved rooms per day"
     assert_equal 2, daily_reservations[1].reserved_rooms, "Should count the number of reserved rooms per day"
     assert_equal 2, daily_reservations[2].reserved_rooms, "Should count the number of reserved rooms per day"
-    assert_equal 2, daily_reservations[3].reserved_rooms, "Should count the number of reserved rooms per day"
+    assert_equal 3, daily_reservations[3].reserved_rooms, "Should count the number of reserved rooms per day"
   end
 
   def test_find_with_filter_should_sum_rate
@@ -139,7 +139,7 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
 
   private
 
-  def new_daily_reservation(reservation_date, amount, currency_code, reservation_status, room_category, rate_code, end_date, origin_of_booking = 'WEB')
+  def new_daily_reservation(reservation_date, amount, currency_code, reservation_status, room_category, rate_code, end_date, origin_of_booking = 'WEB', quantity = 1)
     @resv_daily_el_seq += 1
     DB[:reservation_daily_element_name].insert(:resort => Resort::IMPALA_CODE,
                                                :reservation_date => reservation_date,
@@ -155,7 +155,8 @@ class DailyReservationRepositoryTest < MiniTest::Unit::TestCase
                                                :resv_daily_el_seq => @resv_daily_el_seq,
                                                :room_category => room_category,
                                                :resv_status => reservation_status,
-                                               :origin_of_booking => origin_of_booking)
+                                               :origin_of_booking => origin_of_booking,
+                                               :quantity => quantity)
     DB[:reservation_name].insert(:resort => Resort::IMPALA_CODE,
                                  :resv_name_id => @resv_daily_el_seq * 2,
                                  :trunc_end_date => end_date)

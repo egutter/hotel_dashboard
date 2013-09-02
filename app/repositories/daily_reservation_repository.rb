@@ -58,7 +58,7 @@ class DailyReservationRepository
     def build_base_query
       reservation_daily_element_name_dataset.
         select { sum(:share_amount).as('sum_shared_amount') }.
-        select_append { count('*').as('count_reservations') }.
+        select_append { sum(Sequel.qualify(:reservation_daily_elements, :quantity)).as('count_reservations') }.
         select_append(:currency_code).
         select_append(Sequel.qualify(:reservation_daily_element_name, :reservation_date)).
         join(:reservation_daily_elements, :resv_daily_el_seq => :resv_daily_el_seq, :resort => :resort).
