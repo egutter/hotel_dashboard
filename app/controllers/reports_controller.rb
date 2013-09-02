@@ -1,8 +1,8 @@
 class ReportsController < ApplicationController
 
   def index
-    @date_range = Date.today.at_beginning_of_month..Date.today.advance(:months => 2).at_end_of_month
-    @pickup_date_range = (Date.today-2)..Date.today
+    @date_range = Time.now.at_beginning_of_month.at_beginning_of_day..Time.now.advance(:months => 2).at_end_of_month.at_end_of_day
+    @pickup_date_range = Time.now.ago(2.days).at_end_of_day..Time.now.at_end_of_day
 
     @rate_code_list = ''
     @origin_of_booking_list = ''
@@ -13,7 +13,7 @@ class ReportsController < ApplicationController
   end
 
   def occupancy_data
-    date_range = Date.strptime(params[:from_date], "%d/%m/%Y")..Date.strptime(params[:to_date], "%d/%m/%Y")
+    date_range = Time.strptime(params[:from_date], "%d/%m/%Y").at_beginning_of_day..Time.strptime(params[:to_date], "%d/%m/%Y").at_end_of_day
     rate_code_list = params[:rate_code]
     origin_of_booking_list = params[:origin_of_booking]
 
@@ -27,8 +27,8 @@ class ReportsController < ApplicationController
   end
 
   def pickup_data
-    @date_range = Date.strptime(params[:from_date], "%d/%m/%Y")..Date.strptime(params[:to_date], "%d/%m/%Y")
-    @pickup_date_range = Date.strptime(params[:pickup_from_date], "%d/%m/%Y")..Date.strptime(params[:pickup_to_date], "%d/%m/%Y")
+    @date_range = Time.strptime(params[:from_date], "%d/%m/%Y").at_beginning_of_day..Time.strptime(params[:to_date], "%d/%m/%Y").at_end_of_day
+    @pickup_date_range = Time.strptime(params[:pickup_from_date], "%d/%m/%Y").at_end_of_day..Time.strptime(params[:pickup_to_date], "%d/%m/%Y").at_end_of_day
     rate_code_list = params[:rate_code]
     origin_of_booking_list = params[:origin_of_booking]
 
