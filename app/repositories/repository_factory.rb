@@ -7,4 +7,8 @@ class RepositoryFactory
   def resort_repository
     ResortRepository
   end
+
+  def allotment_repository
+    AllotmentRepository
+  end
 end

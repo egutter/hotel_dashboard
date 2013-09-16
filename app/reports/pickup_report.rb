@@ -20,12 +20,22 @@ class PickupReport
         resort_pickup.add_daily_reservation_for_start_date(daily_reservation)
     }
 
+    allotment_repository.
+      each_with_filter(start_pickup_filter) {|daily_reservation|
+        resort_pickup.add_daily_reservation_for_start_date(daily_reservation)
+    }
+
     end_pickup_filter = QueryFilter.new.add(:resort, resort).add(:reservation_date, @date_range).
       add(:insert_date, @pickup_range.end).
       add(:rate_codes, @rate_code_list).
       add(:origin_of_bookings, @origin_of_booking_list)
 
     daily_reservation_repository.
+      each_with_filter(end_pickup_filter) {|daily_reservation|
+        resort_pickup.add_daily_reservation_for_end_date(daily_reservation)
+    }
+
+    allotment_repository.
       each_with_filter(end_pickup_filter) {|daily_reservation|
         resort_pickup.add_daily_reservation_for_end_date(daily_reservation)
     }
@@ -39,4 +49,9 @@ class PickupReport
   def resort_repository
     @repository_factory.resort_repository
   end
+
+  def allotment_repository
+    @repository_factory.allotment_repository
+  end
+
 end
