@@ -10,6 +10,7 @@ class ReportsController < ApplicationController
 
     @rate_codes = RateCodeRepository.find_by_resort_code resort_code_by_name
     @origin_of_bookings = OriginOfBookingRepository.find_by_resort_code resort_code_by_name
+
   end
 
   def occupancy_data
@@ -34,7 +35,11 @@ class ReportsController < ApplicationController
 
     @pickup_results = PickupReport.new(resort_code_by_name, @date_range, @pickup_date_range, rate_code_list, origin_of_booking_list, RepositoryFactory.new).generate_report_data
 
-    render :partial => 'reports/pickup_table_body', :layout => false
+    respond_to do |format|
+      format.html { render :partial => 'reports/pickup_table_body', :layout => false }
+      format.csv { send_data PickupStatsCsvFormatter.new(@pickup_date_range, @pickup_results).to_csv }
+    end
+
   end
 
   private

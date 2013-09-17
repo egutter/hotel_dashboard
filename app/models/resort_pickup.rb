@@ -2,7 +2,7 @@ class ResortPickup
 
   def initialize(resort)
     @resort = resort
-    @daily_reservations_by_date = {}
+    @daily_reservations_by_date = ActiveSupport::OrderedHash.new
   end
 
   def add_daily_reservation_for_start_date(daily_reservation)

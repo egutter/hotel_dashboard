@@ -6,6 +6,8 @@ class Resort
   SHELTOWN_CODE = 'SHTW'
   EMBAJADOR_CODE = 'EMBJ'
 
+  ALL_CODES = [IMPALA_CODE, SHELTOWN_CODE, EMBAJADOR_CODE]
+
   def initialize(code, total_rooms, room_repairs)
     @code, @total_rooms, @room_repairs = code, total_rooms, room_repairs
   end

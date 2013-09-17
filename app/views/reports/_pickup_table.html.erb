@@ -4,7 +4,7 @@
 
     <h3>Datos</h3>
 
-    <div class="pull-right" style="padding-right: 10px;"><a href="#">Exportar CSV</a></div>
+    <div class="pull-right" style="padding-right: 10px;"><%= link_to "Exportar CSV", reports_pickup_data_path(params[:hotel], format: "csv"), :id=>'export-pickup', :'data-url' => reports_pickup_data_path(params[:hotel], format: "csv") %></div>
   </div>
   <div class="widget-content pick-up">
     <div class="row">

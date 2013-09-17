@@ -145,5 +145,22 @@ $(function () {
         ReportsChart.refresh();
         e.preventDefault();
     });
+    $("#export-pickup").click(function(e){
+        var baseUrl = $("#export-pickup").data('url');
+        var fromDate = $('#from_date').val();
+        var toDate = $('#to_date').val();
+        var pickupFromDate = $('#pickup_from_date').val();
+        var pickupToDate = $('#pickup_to_date').val();
+        var rateCode = $('#rate-code-filter').val();
+        var originOfBooking = $('#origin-of-booking-filter').val();
+        var attributes = '?from_date=' + fromDate + '&to_date=' + toDate + '&pickup_from_date=' + pickupFromDate + '&pickup_to_date=' + pickupToDate;
+        if (rateCode != null) {
+            attributes += '&rate_code=' + rateCode;
+        }
+        if (originOfBooking != null) {
+            attributes += '&origin_of_booking=' + originOfBooking;
+        }
+        $("#export-pickup").attr('href', baseUrl + attributes);
+    });
     ReportsChart.init();
 });
