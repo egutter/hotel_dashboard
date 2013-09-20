@@ -43,7 +43,9 @@ class ResortPickup
   def add_daily_reservation_for_key(daily_reservation, key)
     @daily_reservations_by_date[daily_reservation.reservation_date] ||= {
       :start_date_reservations => [],
-      :end_date_reservations => []
+      :end_date_reservations => [],
+      :start_date_financial_transactions => [],
+      :end_date_financial_transactions => []
     }
 
     @daily_reservations_by_date[daily_reservation.reservation_date][key] << daily_reservation
