@@ -15,7 +15,8 @@ class AllotmentRepository < OperaRepository
     end
 
     def filter_by_origin_of_bookings(query, origin_of_bookings)
-      query.where(:source => origin_of_bookings)
+      # Allotments do not support rate codes. When filtering by rate code exclude all rows
+      query.where('1=2')
     end
 
     def filter_by_insert_date(query, insert_date)
@@ -39,14 +40,14 @@ class AllotmentRepository < OperaRepository
 
     def build_base_query
       allotment_detail_dataset.
-        select { sum(AllotmentRepository.forcasted_to_sell - AllotmentRepository.sold).as('count_reservations') }.
+        select { sum(AllotmentRepository.to_sell - AllotmentRepository.sold).as('count_reservations') }.
         select_append { sum(AllotmentRepository.projected_rate(1) + AllotmentRepository.projected_rate(2) + AllotmentRepository.projected_rate(3) + AllotmentRepository.projected_rate(4)).as('sum_total_amount') }.
         select_append(:currency_code).
         select_append { allotment_date.as('reservation_date') }.
         join('allotment$header'.to_sym, :allotment_header_id => :allotment_header_id, :resort => :resort).
         where(Sequel.qualify('allotment$header', :booking_status) => BOOKING_STATUS).
         filter { to_number(Sequel.qualify('allotment$detail', :room_category), OperaRepository::NUMBER_FORMAT) > OperaRepository::EXCLUDE_ROOM_CATEGORY_BELLOW }.
-        filter { AllotmentRepository.forcasted_to_sell >= AllotmentRepository.sold }.
+        filter { AllotmentRepository.to_sell >= AllotmentRepository.sold }.
         filter { Sequel.negate(AllotmentRepository.projected_occ(1)=>0) | Sequel.negate(AllotmentRepository.projected_occ(2)=>0) | Sequel.negate(AllotmentRepository.projected_occ(3)=>0) | Sequel.negate(AllotmentRepository.projected_occ(4)=>0) }
     end
 
@@ -54,8 +55,8 @@ class AllotmentRepository < OperaRepository
       Sequel.function(SqlUtilities.if_null, Sequel.qualify('allotment$detail', :sold), 0)
     end
 
-    def forcasted_to_sell
-      Sequel.function(SqlUtilities.if_null, Sequel.qualify('allotment$detail', :forcasted_to_sell), 0)
+    def to_sell
+      Sequel.function(SqlUtilities.if_null, Sequel.qualify('allotment$detail', :to_sell), 0)
     end
 
     def projected_rate(col_number)
