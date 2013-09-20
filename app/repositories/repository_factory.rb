@@ -11,4 +11,8 @@ class RepositoryFactory
   def allotment_repository
     AllotmentRepository
   end
+
+  def financial_transaction_repository
+    FinancialTransactionRepository
+  end
 end

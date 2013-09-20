@@ -25,6 +25,11 @@ class PickupReport
         resort_pickup.add_daily_reservation_for_start_date(daily_reservation)
     }
 
+    financial_transaction_repository.
+      each_with_filter(start_pickup_filter) {|daily_reservation|
+        resort_pickup.add_financial_transactions_for_start_date(daily_reservation)
+    }
+
     end_pickup_filter = QueryFilter.new.add(:resort, resort).add(:reservation_date, @date_range).
       add(:insert_date, @pickup_range.end).
       add(:rate_codes, @rate_code_list).
@@ -39,6 +44,11 @@ class PickupReport
       each_with_filter(end_pickup_filter) {|daily_reservation|
         resort_pickup.add_daily_reservation_for_end_date(daily_reservation)
     }
+
+    financial_transaction_repository.
+      each_with_filter(end_pickup_filter) {|daily_reservation|
+        resort_pickup.add_financial_transactions_for_end_date(daily_reservation)
+    }
     resort_pickup
   end
 
@@ -52,6 +62,10 @@ class PickupReport
 
   def allotment_repository
     @repository_factory.allotment_repository
+  end
+
+  def financial_transaction_repository
+    @repository_factory.financial_transaction_repository
   end
 
 end

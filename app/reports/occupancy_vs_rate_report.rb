@@ -20,6 +20,9 @@ class OccupancyVsRateReport
     allotment_repository.each_with_filter(filter) {|daily_reservation|
       resort_stats.add_daily_reservation(daily_reservation)
     }
+    financial_transaction_repository.each_with_filter(filter) {|daily_reservation|
+      resort_stats.add_financial_transaction(daily_reservation)
+    }
     resort_stats
   end
 
@@ -34,4 +37,9 @@ class OccupancyVsRateReport
   def resort_repository
     @repository_factory.resort_repository
   end
+
+  def financial_transaction_repository
+    @repository_factory.financial_transaction_repository
+  end
+
 end
