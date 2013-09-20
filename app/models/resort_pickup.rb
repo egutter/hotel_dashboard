@@ -15,6 +15,7 @@ class ResortPickup
 
   def each_day_pickup
     @daily_reservations_by_date.each do |reservation_date, start_and_end_date_daily_reservations|
+      Rails.logger.debug "each_day_pickup #{reservation_date}, #{start_and_end_date_daily_reservations.to_json}"
 
       start_date_daily_reservations_stats = ResortStats.new(@resort,
                                                             reservation_date,

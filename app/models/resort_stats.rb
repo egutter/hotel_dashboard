@@ -3,6 +3,8 @@ class ResortStats
   attr_reader :reservation_date, :total_reserved_rooms, :revenue_per_available_room, :occupancy, :rate_average
 
   def initialize(resort, reservation_date, daily_reservations)
+    Rails.logger.debug "Initialing ResortStats with: #{resort.code}, #{reservation_date}, #{daily_reservations.to_json}"
+
     @reservation_date = reservation_date
     @total_reserved_rooms = daily_reservations.sum(&:reserved_rooms)
     @rate_average = @total_reserved_rooms.zero? ? 0 : (daily_reservations.sum(&:rate_sum_in_usd) / @total_reserved_rooms).round(2).to_f

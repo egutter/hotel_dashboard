@@ -3,6 +3,7 @@ class DailyPickup
   attr_reader :reservation_date
 
   def initialize(reservation_date, start_date_daily_reservations_stats, end_date_daily_reservations_stats)
+    Rails.logger.debug "DailyPickup: #{reservation_date}, #{start_date_daily_reservations_stats.to_json}, #{end_date_daily_reservations_stats.to_json}"
     @reservation_date = reservation_date
     @start_date_daily_reservations_stats = start_date_daily_reservations_stats
     @end_date_daily_reservations_stats = end_date_daily_reservations_stats

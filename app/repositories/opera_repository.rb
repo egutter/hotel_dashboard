@@ -7,6 +7,7 @@ class OperaRepository
     def each_with_filter(filter)
       build_query_with_filter(filter).
         each { |result|
+        Rails.logger.debug "Query result: #{result.to_json}"
         yield DailyReservation.new(result[:count_reservations],
                                    result[:reservation_date],
                                    result[:sum_total_amount],
