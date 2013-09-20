@@ -11,9 +11,13 @@ class OperaRepository
         yield DailyReservation.new(result[:count_reservations],
                                    result[:reservation_date],
                                    result[:sum_total_amount],
-                                   result[:currency_code],
-                                   find_conversion_rate_by(result[:reservation_date], result[:currency_code]))
+                                   get_currency_code(result),
+                                   find_conversion_rate_by(result[:reservation_date], get_currency_code(result)))
       }
+    end
+
+    def get_currency_code(result)
+      result[:currency_code]
     end
 
     def find_with_filter(filter)

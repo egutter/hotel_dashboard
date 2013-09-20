@@ -37,8 +37,8 @@ class FinancialTransactionRepository < OperaRepository
 
     def build_query_with_filter(filter)
       query = filter.apply(self, build_base_query).
-        group(:trx_date, :currency_code).
-        order(:trx_date, :currency_code)
+        group(:trx_date).
+        order(:trx_date)
 
       Rails.logger.debug "Find financial transactions query: #{query.sql}"
 
@@ -49,11 +49,15 @@ class FinancialTransactionRepository < OperaRepository
       allotment_detail_dataset.
         select { count(:*).as(:count_reservations) }.
         select { sum(Sequel.qualify(:financial_transactions, :net_amount)).as(:sum_total_amount) }.
-        select_append { CurrencyExchangeRepository::ARS_CURRENCY_CODE.as('currency_code') }.
         select_append { trx_date.as('reservation_date') }.
         filter { to_number(:trx_code, OperaRepository::NUMBER_FORMAT) > EXCLUDE_TRX_CODE_BELLOW }.
         filter { to_number(:trx_code, OperaRepository::NUMBER_FORMAT) < EXCLUDE_TRX_CODE_ABOVE }
     end
+
+    def get_currency_code(result)
+      CurrencyExchangeRepository::ARS_CURRENCY_CODE
+    end
+
 
     def allotment_detail_dataset
       DB[:financial_transactions]
