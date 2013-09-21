@@ -1,7 +1,7 @@
 class FinancialTransactionRepository < OperaRepository
 
-  EXCLUDE_TRX_CODE_BELLOW = 999
-  EXCLUDE_TRX_CODE_ABOVE = 2000
+  EXCLUDE_TRX_CODE_BELLOW = '1000'
+  EXCLUDE_TRX_CODE_ABOVE = '2000'
 
   class << self
 
@@ -50,8 +50,9 @@ class FinancialTransactionRepository < OperaRepository
         select { count(:*).as(:count_reservations) }.
         select { sum(Sequel.qualify(:financial_transactions, :net_amount)).as(:sum_total_amount) }.
         select_append { trx_date.as('reservation_date') }.
-        filter { to_number(:trx_code, OperaRepository::NUMBER_FORMAT) > EXCLUDE_TRX_CODE_BELLOW }.
-        filter { to_number(:trx_code, OperaRepository::NUMBER_FORMAT) < EXCLUDE_TRX_CODE_ABOVE }
+        filter { Sequel.qualify('financial_transactions', :trx_code) >= EXCLUDE_TRX_CODE_BELLOW }.
+        filter { Sequel.qualify('financial_transactions', :trx_code) < EXCLUDE_TRX_CODE_ABOVE }.
+        filter(Sequel.function(:length, :trx_code) => 4)
     end
 
     def get_currency_code(result)
