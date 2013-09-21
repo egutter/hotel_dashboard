@@ -77,6 +77,12 @@ var ReportsChart = {
                 },
                 opposite: true
             }],
+            xAxis: {
+                labels: {
+                    rotation: 45,
+                    step: 2
+                }
+            },
             tooltip: {
                 shared: true
             },
