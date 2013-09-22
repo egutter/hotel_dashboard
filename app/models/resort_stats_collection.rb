@@ -48,7 +48,6 @@ class ResortStatsCollection
     (sum / resort_stats.size).round(2)
   end
 
-  private
 
   def resort_stats
     @resort_stats ||= @daily_reservations_by_date.map do |reservation_date, daily_reservations|

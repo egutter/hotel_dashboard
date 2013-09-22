@@ -29,7 +29,7 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'sequel', '~> 3.47.0'
 
-gem 'puma'
+gem 'statsample'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -48,6 +48,7 @@ group :development, :test do
   gem 'pg'
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'puma'
 end
 
 # Use ActiveModel has_secure_password
