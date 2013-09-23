@@ -19,6 +19,7 @@ namespace :stats do
   desc "Calculate correlation"
   task :correlation => :environment do
     date_range = Time.now.at_beginning_of_month.at_beginning_of_day.ago(1.year)..Time.now.at_beginning_of_month.at_beginning_of_day
+    puts "Using data range from #{date_range.begin} to #{date_range.end}"
     Resort::ALL_CODES.each do |resort_code|
       puts "Resort #{resort_code}"
       puts "Retrieving DB data"
@@ -49,6 +50,8 @@ namespace :stats do
       puts "pearson.probability #{pearson.probability}"
       puts "pearson.summary #{pearson.summary}"
       puts "covariance #{Statsample::Bivariate.covariance(occupancy_percentage_scale, rate_average_scale)}"
+      puts "Summary for occupancy. Avg #{occupancy_percentage_scale.mean.round(2)} - Stdev #{occupancy_percentage_scale.sd.round(2)} - Min #{occupancy_percentage_scale.min.round(2)} - Max #{occupancy_percentage_scale.max.round(2)}"
+      puts "Summary for rate. Avg #{rate_average_scale.mean.round(2)} - Stdev #{rate_average_scale.sd.round(2)} - Min #{rate_average_scale.min.round(2)} - Max #{rate_average_scale.max.round(2)}"
       if ENV['RATE']
         expected_average_rate = ENV['RATE'].to_f
         puts "Calculating occupancy for #{expected_average_rate}"
@@ -59,7 +62,7 @@ namespace :stats do
         expected_occupancy = ENV['OCCUPANCY'].to_f
         puts "Calculating average rate for #{expected_occupancy}"
         sr = Statsample::Regression.simple(occupancy_percentage_scale, rate_average_scale)
-        puts "Average rate for #{expected_occupancy} is #{sr.y(expected_occupancy).round(2)}"
+        puts "Average rate for #{expected_occupancy}% is #{sr.y(expected_occupancy).round(2)}"
       end
       puts "----------------------------------------------------"
     end
