@@ -47,7 +47,7 @@ class ReportsController < ApplicationController
     rate_code_list         = params[:rate_code]
     origin_of_booking_list = params[:origin_of_booking]
 
-    adr_target       = params[:adr_target].try(:to_f)
+    adr_target       = params[:adr_target].present? ? params[:adr_target].try(:to_f) : nil
     occupancy_target = params[:occupancy_target].present? ? (params[:occupancy_target].try(:to_f) / 100).round(2) : nil
     rev_par_target   = params[:rev_par_target].to_f
 
@@ -72,15 +72,14 @@ class ReportsController < ApplicationController
       if adr_target.present?
         calculated_target_from_begin_to_now = resort_stats_from_begin_to_now.average_occupancy
         calculated_target_from_now_to_end   = ((rev_par_target * total_days_covered) - (rev_par_from_begin_to_now * days_covered_from_begin_to_now)) / (adr_target * days_covered_from_now_to_end)
-        calculated_target_from_now_to_end = (calculated_target_from_now_to_end*100).round(2)
+        calculated_target_from_now_to_end = (calculated_target_from_now_to_end*100)
       else # User entered Occupancy Target, then we calculate ADR
         calculated_target_from_begin_to_now = resort_stats_from_begin_to_now.average_daily_average_rate
         calculated_target_from_now_to_end   = ((rev_par_target * total_days_covered) - (rev_par_from_begin_to_now * days_covered_from_begin_to_now)) / (occupancy_target * days_covered_from_now_to_end)
       end
     end
 
-
-    @result = ([calculated_target_from_begin_to_now] * days_covered_from_begin_to_now) + ([calculated_target_from_now_to_end] * days_covered_from_now_to_end)
+    @result = ([calculated_target_from_begin_to_now] * days_covered_from_begin_to_now) + ([calculated_target_from_now_to_end.round(2)] * days_covered_from_now_to_end)
     respond_to do |format|
       format.json { render json: @result }
     end
