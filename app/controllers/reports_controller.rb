@@ -48,7 +48,7 @@ class ReportsController < ApplicationController
     origin_of_booking_list = params[:origin_of_booking]
 
     adr_target       = params[:adr_target].try(:to_f)
-    occupancy_target = params[:occupancy_target].try(:to_f)
+    occupancy_target = params[:occupancy_target].present? ? (params[:occupancy_target].try(:to_f) / 100).round(2) : nil
     rev_par_target   = params[:rev_par_target].to_f
 
     total_days_covered = ((total_date_range.end-total_date_range.begin)/(60*60*24)).round
@@ -65,21 +65,20 @@ class ReportsController < ApplicationController
 
     rev_par_from_begin_to_now = resort_stats_from_begin_to_now.average_revenue_per_available_room
 
-    # User entered ADR Target, then we calculate Occupancy %
-    if adr_target.present?
-      target_to_use = adr_target
-      calculated_target_from_begin_to_now = resort_stats_from_begin_to_now.average_occupancy
-    else # User entered Occupancy Target, then we calculate ADR
-      target_to_use = occupancy_target
-      calculated_target_from_begin_to_now = resort_stats_from_begin_to_now.average_daily_average_rate
-    end
-
     if days_covered_from_now_to_end < 1
-      calculated_target_from_now_to_end = calculated_target_from_begin_to_now
       days_covered_from_now_to_end = 0
     else
-      calculated_target_from_now_to_end   = ((rev_par_target * total_days_covered) - (rev_par_from_begin_to_now * days_covered_from_begin_to_now)) / (target_to_use * days_covered_from_now_to_end)
+      # User entered ADR Target, then we calculate Occupancy %
+      if adr_target.present?
+        calculated_target_from_begin_to_now = resort_stats_from_begin_to_now.average_occupancy
+        calculated_target_from_now_to_end   = ((rev_par_target * total_days_covered) - (rev_par_from_begin_to_now * days_covered_from_begin_to_now)) / (adr_target * days_covered_from_now_to_end)
+        calculated_target_from_now_to_end = (calculated_target_from_now_to_end*100).round(2)
+      else # User entered Occupancy Target, then we calculate ADR
+        calculated_target_from_begin_to_now = resort_stats_from_begin_to_now.average_daily_average_rate
+        calculated_target_from_now_to_end   = ((rev_par_target * total_days_covered) - (rev_par_from_begin_to_now * days_covered_from_begin_to_now)) / (occupancy_target * days_covered_from_now_to_end)
+      end
     end
+
 
     @result = ([calculated_target_from_begin_to_now] * days_covered_from_begin_to_now) + ([calculated_target_from_now_to_end] * days_covered_from_now_to_end)
     respond_to do |format|
