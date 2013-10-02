@@ -42,6 +42,51 @@ class ReportsController < ApplicationController
 
   end
 
+  def target_kpi
+    total_date_range       = Time.strptime(params[:from_date], "%d/%m/%Y").at_beginning_of_day..Time.strptime(params[:to_date], "%d/%m/%Y").at_end_of_day
+    rate_code_list         = params[:rate_code]
+    origin_of_booking_list = params[:origin_of_booking]
+
+    adr_target       = params[:adr_target].try(:to_f)
+    occupancy_target = params[:occupancy_target].try(:to_f)
+    rev_par_target   = params[:rev_par_target].to_f
+
+    total_days_covered = ((total_date_range.end-total_date_range.begin)/(60*60*24)).round
+    today_or_last_day_of_range = [Time.now.yesterday.end_of_day, total_date_range.end].min
+    date_range_from_begin_to_now  = total_date_range.begin..today_or_last_day_of_range
+    days_covered_from_begin_to_now = ((date_range_from_begin_to_now.end-date_range_from_begin_to_now.begin)/(60*60*24)).round
+    days_covered_from_now_to_end = ((total_date_range.end-date_range_from_begin_to_now.end)/(60*60*24)).round
+
+    resort_stats_from_begin_to_now = OccupancyVsRateReport.new(resort_code_by_name,
+                                                               date_range_from_begin_to_now,
+                                                               rate_code_list,
+                                                               origin_of_booking_list,
+                                                               RepositoryFactory.new).generate_report_data
+
+    rev_par_from_begin_to_now = resort_stats_from_begin_to_now.average_revenue_per_available_room
+
+    # User entered ADR Target, then we calculate Occupancy %
+    if adr_target.present?
+      target_to_use = adr_target
+      calculated_target_from_begin_to_now = resort_stats_from_begin_to_now.average_occupancy
+    else # User entered Occupancy Target, then we calculate ADR
+      target_to_use = occupancy_target
+      calculated_target_from_begin_to_now = resort_stats_from_begin_to_now.average_daily_average_rate
+    end
+
+    if days_covered_from_now_to_end < 1
+      calculated_target_from_now_to_end = calculated_target_from_begin_to_now
+      days_covered_from_now_to_end = 0
+    else
+      calculated_target_from_now_to_end   = ((rev_par_target * total_days_covered) - (rev_par_from_begin_to_now * days_covered_from_begin_to_now)) / (target_to_use * days_covered_from_now_to_end)
+    end
+
+    @result = ([calculated_target_from_begin_to_now] * days_covered_from_begin_to_now) + ([calculated_target_from_now_to_end] * days_covered_from_now_to_end)
+    respond_to do |format|
+      format.json { render json: @result }
+    end
+  end
+
   private
 
   def resort_code_by_name

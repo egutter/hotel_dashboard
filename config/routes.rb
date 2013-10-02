@@ -8,6 +8,7 @@ HotelDashboard::Application.routes.draw do
   get 'reports/:hotel' => 'reports#index', :as => :reports
   get 'reports/:hotel/occupancy_data' => 'reports#occupancy_data', :as => :reports_occupancy_data
   get 'reports/:hotel/pickup_data' => 'reports#pickup_data', :as => :reports_pickup_data
+  get 'reports/:hotel/target_kpi' => 'reports#target_kpi', :as => :reports_target_kpi
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
