@@ -38,6 +38,13 @@ var ReportsChart = {
             _this.chart.series[1].setData(data['rate'], true);
             _this.chart.series[2].setData(data['revPar'], true);
             _this.chart.xAxis[0].setCategories(data['reservation_date'], true);
+            _this.chart.xAxis[0].removePlotLine('today');
+            _this.chart.xAxis[0].addPlotLine({
+                            id: 'today',
+                            color: '#FF0000',
+                            width: 2,
+                            value: data['today_index']
+                        })
         }).done(function() { $('#success-alert-notification').fadeIn('slow').fadeOut(2000); })
             .fail(function(jqXHR, textStatus, errorThrown) { alert('Se produjo un error: [' + textStatus +': ' + errorThrown+']') });
     },

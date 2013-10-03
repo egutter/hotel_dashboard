@@ -42,6 +42,7 @@ class ReportsController < ApplicationController
 
   end
 
+  # TODO: Refactor this and extract logic from controllers
   def target_kpi
     total_date_range       = Time.strptime(params[:from_date], "%d/%m/%Y").at_beginning_of_day..Time.strptime(params[:to_date], "%d/%m/%Y").at_end_of_day
     rate_code_list         = params[:rate_code]

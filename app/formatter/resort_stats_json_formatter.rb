@@ -5,7 +5,7 @@ class ResortStatsJsonFormatter
   end
 
   def to_json
-    json_result = {:reservation_date => [], :occupancy => [], :rate => [], :revPar => []}
+    json_result = {:reservation_date => [], :occupancy => [], :rate => [], :revPar => [], :today_index => @resort_stats_collection.index_at(Date.today)}
     @resort_stats_collection.each_day_stats { |resort_stats|
       json_result[:reservation_date] << resort_stats.reservation_date.strftime('%d %b')
       json_result[:occupancy] << resort_stats.occupancy_percentage

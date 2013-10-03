@@ -18,6 +18,10 @@ class ResortStatsCollection
     @financial_transactions_by_date[daily_reservation.reservation_date] << daily_reservation
   end
 
+  def index_at(reservation_date)
+    @daily_reservations_by_date.keys.index(reservation_date)
+  end
+
   def each_day_stats
     @daily_reservations_by_date.each do |reservation_date, daily_reservations|
       yield ResortStats.new(@resort,
