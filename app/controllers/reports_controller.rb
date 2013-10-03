@@ -67,6 +67,7 @@ class ReportsController < ApplicationController
 
     if days_covered_from_now_to_end < 1
       days_covered_from_now_to_end = 0
+      calculated_target_from_now_to_end = 0.0
     else
       # User entered ADR Target, then we calculate Occupancy %
       if adr_target.present?
@@ -79,7 +80,7 @@ class ReportsController < ApplicationController
       end
     end
 
-    @result = ([calculated_target_from_begin_to_now] * days_covered_from_begin_to_now) + ([calculated_target_from_now_to_end.round(2)] * days_covered_from_now_to_end)
+    @result = ([nil] * days_covered_from_begin_to_now) + ([calculated_target_from_now_to_end.round(2)] * days_covered_from_now_to_end)
     respond_to do |format|
       format.json { render json: @result }
     end
