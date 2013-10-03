@@ -39,12 +39,14 @@ var ReportsChart = {
             _this.chart.series[2].setData(data['revPar'], true);
             _this.chart.xAxis[0].setCategories(data['reservation_date'], true);
             _this.chart.xAxis[0].removePlotLine('today');
-            _this.chart.xAxis[0].addPlotLine({
-                            id: 'today',
-                            color: '#FF0000',
-                            width: 2,
-                            value: data['today_index']
-                        })
+            if (data['today_index'] != null) {
+                _this.chart.xAxis[0].addPlotLine({
+                                id: 'today',
+                                color: '#A64E8B',
+                                width: 2,
+                                value: data['today_index']
+                            })
+            }
         }).done(function() { $('#success-alert-notification').fadeIn('slow').fadeOut(2000); })
             .fail(function(jqXHR, textStatus, errorThrown) { alert('Se produjo un error: [' + textStatus +': ' + errorThrown+']') });
     },
@@ -97,13 +99,24 @@ var ReportsChart = {
     clearTargetSeries: function(chart) {
         if (chart.series[3] != undefined) {
             chart.series[3].remove();
+            chart.series[4].remove();
         }
     },
     addTargetOccupancy: function(chart, data) {
         chart.addSeries({
                 name: 'Ocupación Target',
-                data: data,
-                color: '#92B0D3',
+                data: data['target'],
+                color: '#C1D19E',
+                type: 'spline',
+                yAxis: 1,
+                tooltip: {
+                    valueSuffix: ' %'
+                }
+        });
+        chart.addSeries({
+                name: 'Ocupación Promedio',
+                data: data['average'],
+                color: '#9EC1D1',
                 type: 'spline',
                 yAxis: 1,
                 tooltip: {
@@ -114,8 +127,17 @@ var ReportsChart = {
     addTargetAdr: function(chart, data) {
         chart.addSeries({
                 name: 'ADR Target',
-                data: data,
+                data: data['target'],
                 color: '#C1D19E',
+                type: 'spline',
+                tooltip: {
+                    valuePrefix: '$ '
+                }
+        });
+        chart.addSeries({
+                name: 'ADR Promedio',
+                data: data['average'],
+                color: '#9EC1D1',
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
