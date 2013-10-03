@@ -33,6 +33,7 @@ var ReportsChart = {
                     to_date: toDate,
                     rate_code: rateCode,
                     origin_of_booking: originOfBooking}, function (data) {
+            _this.clearTargetSeries(_this.chart);
             _this.chart.series[0].setData(data['occupancy'], true);
             _this.chart.series[1].setData(data['rate'], true);
             _this.chart.series[2].setData(data['revPar'], true);
@@ -77,9 +78,7 @@ var ReportsChart = {
                     adr_target: adrTarget,
                     occupancy_target: occupancyTarget,
                     rev_par_target: revParTarget}, function (data) {
-            if (_this.chart.series[3] != undefined) {
-                _this.chart.series[3].remove();
-            }
+            _this.clearTargetSeries(_this.chart);
             if (adrTarget != '') {
                 _this.addTargetOccupancy(_this.chart, data);
             } else {
@@ -88,11 +87,16 @@ var ReportsChart = {
         }).done(function() { $('#success-alert-notification').fadeIn('slow').fadeOut(2000); })
             .fail(function(jqXHR, textStatus, errorThrown) { alert('Se produjo un error: [' + textStatus +': ' + errorThrown+']') });
     },
+    clearTargetSeries: function(chart) {
+        if (chart.series[3] != undefined) {
+            chart.series[3].remove();
+        }
+    },
     addTargetOccupancy: function(chart, data) {
         chart.addSeries({
                 name: 'Ocupación Target',
                 data: data,
-                color: '#33CCFF',
+                color: '#92B0D3',
                 type: 'spline',
                 yAxis: 1,
                 tooltip: {
@@ -104,7 +108,7 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'ADR Target',
                 data: data,
-                color: '#33FF66',
+                color: '#C1D19E',
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
@@ -151,7 +155,7 @@ var ReportsChart = {
             xAxis: {
                 labels: {
                     rotation: 45,
-                    step: 2
+                    step: 7
                 }
             },
             tooltip: {
