@@ -106,7 +106,7 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'Ocupación Target',
                 data: data['target'],
-                color: '#C1D19E',
+                color: '#004DFF',
                 type: 'spline',
                 yAxis: 1,
                 tooltip: {
@@ -116,7 +116,7 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'Ocupación Promedio',
                 data: data['average'],
-                color: '#9EC1D1',
+                color: '#FF3300',
                 type: 'spline',
                 yAxis: 1,
                 tooltip: {
@@ -128,7 +128,7 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'ADR Target',
                 data: data['target'],
-                color: '#C1D19E',
+                color: '#004DFF',
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
@@ -137,7 +137,7 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'ADR Promedio',
                 data: data['average'],
-                color: '#9EC1D1',
+                color: '#FF3300',
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
