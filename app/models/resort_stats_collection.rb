@@ -18,8 +18,8 @@ class ResortStatsCollection
     @financial_transactions_by_date[daily_reservation.reservation_date] << daily_reservation
   end
 
-  def index_at(reservation_date)
-    @daily_reservations_by_date.keys.index(reservation_date)
+  def index_at(a_date)
+    @daily_reservations_by_date.keys.index { |reservation_date| reservation_date.to_date == a_date }
   end
 
   def each_day_stats
