@@ -99,6 +99,8 @@ var ReportsChart = {
     clearTargetSeries: function(chart) {
         if (chart.series[3] != undefined) {
             chart.series[3].remove();
+        }
+        if (chart.series[4] != undefined) {
             chart.series[4].remove();
         }
     },
