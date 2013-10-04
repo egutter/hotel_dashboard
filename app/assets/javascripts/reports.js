@@ -93,15 +93,15 @@ var ReportsChart = {
             } else {
                 _this.addTargetAdr(_this.chart, data);
             }
+            _this.chart.redraw();
         }).done(function() { $('#success-alert-notification').fadeIn('slow').fadeOut(2000); })
             .fail(function(jqXHR, textStatus, errorThrown) { alert('Se produjo un error: [' + textStatus +': ' + errorThrown+']') });
     },
     clearTargetSeries: function(chart) {
-        if (chart.series[3] != undefined) {
-            chart.series[3].remove();
-        }
-        if (chart.series[4] != undefined) {
-            chart.series[4].remove();
+        if (chart.series.length == 5) {
+            chart.series[3].remove(chart.series.length - 1);
+            chart.series[3].remove(chart.series.length - 1);
+
         }
     },
     addTargetOccupancy: function(chart, data) {
