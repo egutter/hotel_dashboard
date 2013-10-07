@@ -116,7 +116,8 @@ var ReportsChart = {
                 },
                 tooltip: {
                     valueSuffix: ' %'
-                }
+                },
+                dashStyle: 'shortdot'
         });
         chart.addSeries({
                 name: 'Ocupación Promedio',
@@ -129,7 +130,8 @@ var ReportsChart = {
                 },
                 tooltip: {
                     valueSuffix: ' %'
-                }
+                },
+                dashStyle: 'shortdot'
         });
     },
     addTargetAdr: function(chart, data) {
@@ -143,7 +145,9 @@ var ReportsChart = {
                 },
                 tooltip: {
                     valuePrefix: '$ '
-                }
+                },
+                dashStyle: 'shortdot'
+
         });
         chart.addSeries({
                 name: 'ADR Promedio',
@@ -156,6 +160,7 @@ var ReportsChart = {
                 tooltip: {
                     valuePrefix: '$ '
                 },
+                dashStyle: 'shortdot'
 
         });
     },
@@ -236,11 +241,7 @@ var ReportsChart = {
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
-                },
-                marker: {
-                    enabled: false
-                },
-                dashStyle: 'shortdot'
+                }
             }]
         };
         this.chart = new Highcharts.Chart(options);
