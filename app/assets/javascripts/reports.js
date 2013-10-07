@@ -108,9 +108,12 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'Ocupación Target',
                 data: data['target'],
-                color: '#004DFF',
+                color: '#FF3366',
                 type: 'spline',
                 yAxis: 1,
+                marker: {
+                    enabled: false
+                },
                 tooltip: {
                     valueSuffix: ' %'
                 }
@@ -118,9 +121,12 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'Ocupación Promedio',
                 data: data['average'],
-                color: '#FF3300',
+                color: '#00B88A',
                 type: 'spline',
                 yAxis: 1,
+                marker: {
+                    enabled: false
+                },
                 tooltip: {
                     valueSuffix: ' %'
                 }
@@ -130,8 +136,11 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'ADR Target',
                 data: data['target'],
-                color: '#004DFF',
+                color: '#FF3366',
                 type: 'spline',
+                marker: {
+                    enabled: false
+                },
                 tooltip: {
                     valuePrefix: '$ '
                 }
@@ -139,11 +148,15 @@ var ReportsChart = {
         chart.addSeries({
                 name: 'ADR Promedio',
                 data: data['average'],
-                color: '#FF3300',
+                color: '#00B88A',
                 type: 'spline',
+                marker: {
+                    enabled: false
+                },
                 tooltip: {
                     valuePrefix: '$ '
-                }
+                },
+
         });
     },
     init: function() {
@@ -223,7 +236,11 @@ var ReportsChart = {
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
-                }
+                },
+                marker: {
+                    enabled: false
+                },
+                dashStyle: 'shortdot'
             }]
         };
         this.chart = new Highcharts.Chart(options);
