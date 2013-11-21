@@ -56,7 +56,11 @@ class AllotmentRepository < OperaRepository
     end
 
     def to_sell
-      Sequel.function(SqlUtilities.if_null, Sequel.qualify('allotment$detail', :to_sell), 0)
+      Sequel.function(SqlUtilities.if_null, Sequel.qualify('allotment$detail', :to_sell), AllotmentRepository.forcasted_to_sell)
+    end
+
+    def forcasted_to_sell
+      Sequel.function(SqlUtilities.if_null, Sequel.qualify('allotment$detail', :forcasted_to_sell), 0)
     end
 
     def projected_rate(col_number)
