@@ -87,7 +87,7 @@ class ReportsController < ApplicationController
       end
     end
 
-    data_from_begin_to_now_empty = ([nil] * days_covered_from_begin_to_now)
+    data_from_begin_to_now_empty = (days_covered_from_begin_to_now < 1) ? [] : ([nil] * days_covered_from_begin_to_now)
     @result = {target: data_from_begin_to_now_empty + ([calculated_target_from_now_to_end.round(2)] * days_covered_from_now_to_end),
                average: data_from_begin_to_now_empty + ([calculated_average_from_now_to_end] * days_covered_from_now_to_end) }
     respond_to do |format|
