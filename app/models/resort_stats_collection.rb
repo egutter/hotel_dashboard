@@ -35,6 +35,8 @@ class ResortStatsCollection
     sum = resort_stats.inject(0) do |memo, resort_stat|
       memo + resort_stat.occupancy
     end
+    return 0.0 if resort_stats.empty?
+
     ((sum / resort_stats.size) * 100).round(2)
   end
 
@@ -42,6 +44,8 @@ class ResortStatsCollection
     sum = resort_stats.inject(0) do |memo, resort_stat|
       memo + resort_stat.rate_average
     end
+    return 0.0 if resort_stats.empty?
+
     (sum / resort_stats.size).round(2)
   end
 
@@ -49,6 +53,8 @@ class ResortStatsCollection
     sum = resort_stats.inject(0) do |memo, resort_stat|
       memo + resort_stat.revenue_per_available_room
     end
+    return 0.0 if resort_stats.empty?
+
     (sum / resort_stats.size).round(2)
   end
 
