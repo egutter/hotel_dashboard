@@ -42,8 +42,31 @@ class ReportsController < ApplicationController
 
   end
 
-  # TODO: Refactor this and extract logic from controllers
   def target_kpi
+    date_range       = Time.strptime(params[:from_date], "%d/%m/%Y").at_beginning_of_day..Time.strptime(params[:to_date], "%d/%m/%Y").at_end_of_day
+    rate_code_list         = params[:rate_code]
+    origin_of_booking_list = params[:origin_of_booking]
+
+    adr_target       = params[:adr_target].present? ? params[:adr_target].try(:to_f) : nil
+    occupancy_target = params[:occupancy_target].present? ? (params[:occupancy_target].try(:to_f) / 100).round(2) : nil
+    rev_par_target   = params[:rev_par_target].to_f
+
+    report = TargetKPI::Report.new(resort_code_by_name, date_range, rate_code_list, origin_of_booking_list, rev_par_target, RepositoryFactory.new)
+
+    if adr_target.present?
+      calculator = report.with_adr_target(adr_target)
+    else
+      calculator = report.with_occupancy_target(occupancy_target)
+    end
+    @result = {target: calculator.target_values, average: calculator.historical_values}
+
+    respond_to do |format|
+      format.json { render json: @result }
+    end
+
+  end
+  # TODO: Refactor this and extract logic from controllers
+  def target_kpi2
     total_date_range       = Time.strptime(params[:from_date], "%d/%m/%Y").at_beginning_of_day..Time.strptime(params[:to_date], "%d/%m/%Y").at_end_of_day
     rate_code_list         = params[:rate_code]
     origin_of_booking_list = params[:origin_of_booking]

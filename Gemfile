@@ -43,6 +43,8 @@ end
 group :test do
   gem "minitest", "~> 4.7"
   gem "minitest-reporters", '>= 0.5.0'
+  gem "mocha"
+  gem "timecop"
 end
 group :development, :test do
   gem 'pg'
