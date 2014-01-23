@@ -20,7 +20,8 @@ class ResortRepository
       Rails.logger.debug "Find room repairs query: #{query.sql}"
 
       query.collect { |result|
-        RoomRepair.new(result[:begin_date]..result[:end_date])
+        end_date = result[:completed_date] || result[:end_date]
+        RoomRepair.new(result[:begin_date]..end_date)
       }
     end
 

@@ -9,7 +9,7 @@ class ResortStats
     @reservation_date = reservation_date
     @total_reserved_rooms = daily_reservations.sum(&:reserved_rooms)
     @rate_average = @total_reserved_rooms.zero? ? 0 : (total_rate_in_usd(daily_reservations, financial_transactions) / @total_reserved_rooms).round(2).to_f
-    @occupancy = (@total_reserved_rooms.to_f / resort.total_rooms_at(reservation_date)).round(2)
+    @occupancy = (@total_reserved_rooms.to_f / resort.total_rooms_at(reservation_date))
     @revenue_per_available_room = (@rate_average * @occupancy).round(2).to_f
   end
 
