@@ -43,4 +43,30 @@ class ResortStatsCollectionTest < MiniTest::Unit::TestCase
     assert_equal [26, 38], result
   end
 
+  def test_average_occupancy
+    assert_equal 35.0, @stats.average_occupancy
+  end
+
+  def test_average_occupancy_up_to
+    assert_equal 30.0, @stats.average_occupancy_up_to(Date.new(2013, 8, 7))
+    assert_equal 35.0, @stats.average_occupancy_up_to(Date.new(2013, 8, 8))
+  end
+
+  def test_average_daily_average_rate
+    assert_equal 90.84, @stats.average_daily_average_rate
+  end
+
+  def test_average_daily_average_rate_up_to
+    assert_equal 86.67, @stats.average_daily_average_rate_up_to(Date.new(2013, 8, 7))
+    assert_equal 90.84, @stats.average_daily_average_rate_up_to(Date.new(2013, 8, 8))
+  end
+
+  def test_average_revenue_per_available_room
+    assert_equal 32.0, @stats.average_revenue_per_available_room
+  end
+
+  def test_average_revenue_per_available_room_up_to
+    assert_equal 26.0, @stats.average_revenue_per_available_room_up_to(Date.new(2013, 8, 7))
+    assert_equal 32.0, @stats.average_revenue_per_available_room_up_to(Date.new(2013, 8, 8))
+  end
 end

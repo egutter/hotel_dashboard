@@ -31,37 +31,68 @@ class ResortStatsCollection
     end
   end
 
-  def average_occupancy
-    sum = resort_stats.inject(0) do |memo, resort_stat|
-      memo + resort_stat.occupancy
-    end
-    return 0.0 if resort_stats.empty?
+  def average_occupancy_up_to(a_date)
+    calculate_average_occupancy_with filter_stats_by_date(a_date)
+  end
 
-    ((sum / resort_stats.size) * 100).round(2)
+  def average_occupancy
+    calculate_average_occupancy_with(resort_stats)
+  end
+
+  def average_daily_average_rate_up_to(a_date)
+    calculate_average_daily_average_rate_with filter_stats_by_date(a_date)
   end
 
   def average_daily_average_rate
-    sum = resort_stats.inject(0) do |memo, resort_stat|
-      memo + resort_stat.rate_average
-    end
-    return 0.0 if resort_stats.empty?
+    calculate_average_daily_average_rate_with(resort_stats)
+  end
 
-    (sum / resort_stats.size).round(2)
+  def average_revenue_per_available_room_up_to(a_date)
+    calculate_average_revenue_per_available_room_with filter_stats_by_date(a_date)
   end
 
   def average_revenue_per_available_room
-    sum = resort_stats.inject(0) do |memo, resort_stat|
-      memo + resort_stat.revenue_per_available_room
-    end
-    return 0.0 if resort_stats.empty?
-
-    (sum / resort_stats.size).round(2)
+    calculate_average_revenue_per_available_room_with resort_stats
   end
-
 
   def resort_stats
     @resort_stats ||= @daily_reservations_by_date.map do |reservation_date, daily_reservations|
       ResortStats.new(@resort, reservation_date, daily_reservations, @financial_transactions_by_date[reservation_date])
     end
   end
+
+  private
+
+  def filter_stats_by_date(a_date)
+    resort_stats.select { |resort_stat| resort_stat.reservation_date <= a_date }
+  end
+
+  def calculate_average_revenue_per_available_room_with(stats_collection)
+    sum = stats_collection.inject(0) do |memo, resort_stat|
+      memo + resort_stat.revenue_per_available_room
+    end
+    return 0.0 if stats_collection.empty?
+
+    (sum / stats_collection.size).round(2)
+  end
+
+  def calculate_average_daily_average_rate_with(stats_collection)
+    sum = stats_collection.inject(0) do |memo, resort_stat|
+      memo + resort_stat.rate_average
+    end
+    return 0.0 if stats_collection.empty?
+
+    (sum / stats_collection.size).round(2)
+  end
+
+
+  def calculate_average_occupancy_with(stats_collection)
+    sum = stats_collection.inject(0) do |memo, resort_stat|
+      memo + resort_stat.occupancy
+    end
+    return 0.0 if stats_collection.empty?
+
+    ((sum / stats_collection.size) * 100).round(2)
+  end
+
 end

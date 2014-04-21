@@ -37,6 +37,9 @@ var ReportsChart = {
             _this.chart.series[0].setData(data['occupancy'], true);
             _this.chart.series[1].setData(data['rate'], true);
             _this.chart.series[2].setData(data['revPar'], true);
+            _this.chart.series[3].setData(data['cumulativeOccupancyAvg'], true);
+            _this.chart.series[4].setData(data['cumulativeRateAvg'], true);
+            _this.chart.series[5].setData(data['cumulativeRevParAvg'], true);
             _this.chart.xAxis[0].setCategories(data['reservation_date'], true);
             _this.chart.xAxis[0].removePlotLine('today');
             if (data['today_index'] != null) {
@@ -233,6 +236,27 @@ var ReportsChart = {
                 }
             }, {
                 name: 'RevPar',
+                color: '#FF6633',
+                type: 'spline',
+                tooltip: {
+                    valuePrefix: '$ '
+                }
+            }, {
+                name: 'Ocup. Acum.',
+                color: '#FF3366',
+                type: 'column',
+                tooltip: {
+                    valueSuffix: ' %'
+                }
+            }, {
+                name: 'Rate Acum.',
+                color: '#66FF33',
+                type: 'spline',
+                tooltip: {
+                    valuePrefix: '$ '
+                }
+            }, {
+                name: 'RevPar Acum',
                 color: '#FF6633',
                 type: 'spline',
                 tooltip: {
