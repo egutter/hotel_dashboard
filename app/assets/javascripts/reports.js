@@ -247,21 +247,24 @@ var ReportsChart = {
                 type: 'column',
                 tooltip: {
                     valueSuffix: ' %'
-                }
+                },
+                visible: false
             }, {
                 name: 'Rate Acum.',
                 color: '#66FF33',
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
-                }
+                },
+                visible: false
             }, {
                 name: 'RevPar Acum',
                 color: '#FF6633',
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
-                }
+                },
+                visible: false
             }]
         };
         this.chart = new Highcharts.Chart(options);
