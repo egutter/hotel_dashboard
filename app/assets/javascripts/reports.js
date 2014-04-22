@@ -23,6 +23,11 @@ var PickupTable = {
 var ReportsChart = {
     chart: null,
     cumulativeStats: new Array(),
+    cumulativeStatsOptions: [
+        {color: '#44A3A7', name: 'Ocup. Acum.', valueSuffix: ' %' },
+        {color: '#A6964E', name: 'Rate Acum.', valuePrefix: '$ '},
+        {color: '#44A3A7', name: 'RevPar Acum.', valuePrefix: '$ '}
+    ],
     refresh: function() {
         var url = $('#chart-container').data('occupancy-path');
         var fromDate = $('#from_date').val();
@@ -165,6 +170,19 @@ var ReportsChart = {
 
         });
     },
+    formatSeriesTooltip: function(name, value, color, prefix, suffix) {
+        var out = '<br/>';
+        out += '<span style="fill:' + color +'">' + name + '</span>';
+        out += ': ';
+        if (prefix != undefined) {
+            out += prefix;
+        }
+        out += value;
+        if (suffix != undefined) {
+            out += suffix;
+        }
+        return out;
+    },
     init: function() {
         var options = {
             chart: {
@@ -215,23 +233,14 @@ var ReportsChart = {
                     var categories = chart.xAxis[0].categories;
                     var index = 0;
                     while(this.x !== categories[index]){index++;}
+
                     $.each(chart.series, function(i, series) {
-                        out += '<br/>';
-                        out += '<span style="fill:' + series.color +'">' + series.name + '</span>';
-                        out += ': ';
-                        if (series.options.tooltip.valuePrefix != undefined) {
-                            out += series.options.tooltip.valuePrefix;
-                        }
-                        out += series.data[index].y;
-                        if (series.options.tooltip.valueSuffix != undefined) {
-                            out += series.options.tooltip.valueSuffix;
-                        }
+                        out += ReportsChart.formatSeriesTooltip(series.name, series.data[index].y, series.color, series.options.tooltip.valuePrefix, series.options.tooltip.valueSuffix);
                     });
+
                     $.each(ReportsChart.cumulativeStats, function(i, stats) {
-                        out += '<br/>';
-                        out += '<span style="fill:#A6964E">Nombre' + i + '</span>';
-                        out += ': ';
-                        out += stats[index];
+                        var options = ReportsChart.cumulativeStatsOptions[i];
+                        out += ReportsChart.formatSeriesTooltip(options.name, stats[index], options.color, options.valuePrefix, options.valueSuffix);
                     });
                     return out;
                 },
