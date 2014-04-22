@@ -22,6 +22,7 @@ var PickupTable = {
 };
 var ReportsChart = {
     chart: null,
+    cumulativeStats: new Array(),
     refresh: function() {
         var url = $('#chart-container').data('occupancy-path');
         var fromDate = $('#from_date').val();
@@ -37,9 +38,10 @@ var ReportsChart = {
             _this.chart.series[0].setData(data['occupancy'], true);
             _this.chart.series[1].setData(data['rate'], true);
             _this.chart.series[2].setData(data['revPar'], true);
-            _this.chart.series[3].setData(data['cumulativeOccupancyAvg'], true);
-            _this.chart.series[4].setData(data['cumulativeRateAvg'], true);
-            _this.chart.series[5].setData(data['cumulativeRevParAvg'], true);
+            _this.cumulativeStats[0] = data['cumulativeOccupancyAvg'];
+            _this.cumulativeStats[1] = data['cumulativeRateAvg'];
+            _this.cumulativeStats[2] = data['cumulativeRevParAvg'];
+
             _this.chart.xAxis[0].setCategories(data['reservation_date'], true);
             _this.chart.xAxis[0].removePlotLine('today');
             if (data['today_index'] != null) {
@@ -225,6 +227,12 @@ var ReportsChart = {
                             out += series.options.tooltip.valueSuffix;
                         }
                     });
+                    $.each(ReportsChart.cumulativeStats, function(i, stats) {
+                        out += '<br/>';
+                        out += '<span style="fill:#A6964E">Nombre' + i + '</span>';
+                        out += ': ';
+                        out += stats[index];
+                    });
                     return out;
                 },
                 shared: true
@@ -261,30 +269,6 @@ var ReportsChart = {
                 tooltip: {
                     valuePrefix: '$ '
                 }
-            }, {
-                name: 'Ocup. Acum.',
-                color: '#44A3A7',
-                type: 'column',
-                tooltip: {
-                    valueSuffix: ' %'
-                },
-                visible: false
-            }, {
-                name: 'Rate Acum.',
-                color: '#A6964E',
-                type: 'spline',
-                tooltip: {
-                    valuePrefix: '$ '
-                },
-                visible: false
-            }, {
-                name: 'RevPar Acum',
-                color: '#FFCC33',
-                type: 'spline',
-                tooltip: {
-                    valuePrefix: '$ '
-                },
-                visible: false
             }]
         };
         this.chart = new Highcharts.Chart(options);
