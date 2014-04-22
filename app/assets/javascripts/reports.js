@@ -207,6 +207,18 @@ var ReportsChart = {
                 }
             },
             tooltip: {
+                formatter: function() {
+                    var s = '<b>'+ this.x +'</b>';
+                    var chart = this.points[0].series.chart;
+                    var categories = chart.xAxis[0].categories;
+                    var index = 0;
+                    while(this.x !== categories[index]){index++;}
+                    $.each(chart.series, function(i, series) {
+                        s += '<br/>'+ series.name +': ' +
+                        series.data[index].y +'m';
+                    });
+                    return s;
+                },
                 shared: true
             },
             legend: {
