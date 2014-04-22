@@ -208,16 +208,24 @@ var ReportsChart = {
             },
             tooltip: {
                 formatter: function() {
-                    var s = '<b>'+ this.x +'</b>';
+                    var out = '<b>'+ this.x +'</b>';
                     var chart = this.points[0].series.chart;
                     var categories = chart.xAxis[0].categories;
                     var index = 0;
                     while(this.x !== categories[index]){index++;}
                     $.each(chart.series, function(i, series) {
-                        s += '<br/>'+ series.name +': ' +
-                        series.data[index].y +'m';
+                        out += '<br/>';
+                        out += '<span style="fill:' + series.color +'">' + series.name + '</span>';
+                        out += ': ';
+                        if (series.options.tooltip.valuePrefix != undefined) {
+                            out += series.options.tooltip.valuePrefix;
+                        }
+                        out += series.data[index].y;
+                        if (series.options.tooltip.valueSuffix != undefined) {
+                            out += series.options.tooltip.valueSuffix;
+                        }
                     });
-                    return s;
+                    return out;
                 },
                 shared: true
             },
@@ -255,7 +263,7 @@ var ReportsChart = {
                 }
             }, {
                 name: 'Ocup. Acum.',
-                color: '#FF3366',
+                color: '#44A3A7',
                 type: 'column',
                 tooltip: {
                     valueSuffix: ' %'
@@ -263,7 +271,7 @@ var ReportsChart = {
                 visible: false
             }, {
                 name: 'Rate Acum.',
-                color: '#66FF33',
+                color: '#A6964E',
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
@@ -271,7 +279,7 @@ var ReportsChart = {
                 visible: false
             }, {
                 name: 'RevPar Acum',
-                color: '#FF6633',
+                color: '#FFCC33',
                 type: 'spline',
                 tooltip: {
                     valuePrefix: '$ '
