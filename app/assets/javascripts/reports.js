@@ -49,7 +49,7 @@ var ReportsChart = {
             _this.chart.series[0].setData(data['occupancy'], true);
             _this.chart.series[1].setData(data['rate'], true);
             _this.chart.series[2].setData(data['revPar'], true);
-            _this.chart.setTitle(null, {text: _this.formatSubtitle(data['occupancyAvgForPeriod'], data['rateAvgForPeriod'], data['revParAvgForPeriod'])});
+            _this.chart.setTitle(null, {style: {color: '#FF3366', fontWeight: 'bold'}, text: _this.formatSubtitle(data['occupancyAvgForPeriod'], data['rateAvgForPeriod'], data['revParAvgForPeriod'])});
             _this.cumulativeStats[0] = data['cumulativeOccupancyAvg'];
             _this.cumulativeStats[1] = data['cumulativeRateAvg'];
             _this.cumulativeStats[2] = data['cumulativeRevParAvg'];
