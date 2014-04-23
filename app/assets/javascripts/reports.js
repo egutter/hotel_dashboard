@@ -28,6 +28,12 @@ var ReportsChart = {
         {color: '#A6964E', name: 'Rate Acum.', valuePrefix: '$ '},
         {color: '#44A3A7', name: 'RevPar Acum.', valuePrefix: '$ '}
     ],
+    formatSubtitle: function(occupancyAvgForPeriod, rateAvgForPeriod, revParAvgForPeriod) {
+        var out = 'Ocupación Promedio: ' + occupancyAvgForPeriod + ' %';
+        out += '<br/>Rate Promedio: $' + rateAvgForPeriod;
+        out += '<br/>RevPar Promedio: $' + revParAvgForPeriod;
+        return out;
+    },
     refresh: function() {
         var url = $('#chart-container').data('occupancy-path');
         var fromDate = $('#from_date').val();
@@ -43,6 +49,7 @@ var ReportsChart = {
             _this.chart.series[0].setData(data['occupancy'], true);
             _this.chart.series[1].setData(data['rate'], true);
             _this.chart.series[2].setData(data['revPar'], true);
+            _this.chart.setTitle(null, {text: _this.formatSubtitle(data['occupancyAvgForPeriod'], data['rateAvgForPeriod'], data['revParAvgForPeriod'])});
             _this.cumulativeStats[0] = data['cumulativeOccupancyAvg'];
             _this.cumulativeStats[1] = data['cumulativeRateAvg'];
             _this.cumulativeStats[2] = data['cumulativeRevParAvg'];

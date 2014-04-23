@@ -12,7 +12,10 @@ class ResortStatsJsonFormatter
                    :cumulativeOccupancyAvg => [],
                    :cumulativeRateAvg => [],
                    :cumulativeRevParAvg => [],
-                   :today_index => index_at_today_for_reservation_date()}
+                   :today_index => index_at_today_for_reservation_date(),
+                   :occupancyAvgForPeriod => @resort_stats_collection.average_occupancy,
+                   :rateAvgForPeriod => @resort_stats_collection.average_daily_average_rate,
+                   :revParAvgForPeriod => @resort_stats_collection.average_revenue_per_available_room}
 
     @resort_stats_collection.each_day_stats { |resort_stats|
       json_result[:reservation_date] << resort_stats.reservation_date.strftime('%d %b')
